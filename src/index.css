@@ -12,3 +12,7 @@ body {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#edittor li {
+  list-style-type: disc;
+}

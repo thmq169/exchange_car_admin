@@ -1,22 +1,30 @@
 import React from 'react'
-import { BsCurrencyDollar } from 'react-icons/bs'
-import { GoPrimitiveDot } from 'react-icons/go'
 
-import { IoIosMore } from 'react-icons/io'
+import { IoMdPerson } from 'react-icons/io'
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
-import { Stacked, Pie, Button, LineChart, SparkLine } from '../components'
-import {
-  earningData,
-  medicalproBranding,
-  recentTransactions,
-  weeklyStats,
-  dropdownData,
-  SparklineAreaData,
-  ecomPieChartData,
-} from '../data/dummy'
+import { Pie, Button } from '../components'
+import { dropdownData } from '../data/dummy'
 import { useStateContext } from '../contexts/ContextProvider'
-import product9 from '../data/product9.jpg'
+import useGetData from '../hooks/use-get-data'
+import {
+  calculateBodyTypePercentages,
+  calculateBrandPercentages,
+  calculateCityPercentages,
+  calculateFuelPercentages,
+  getNumberFromId,
+} from '../utils'
+
+import { FaCar, FaUserTie } from 'react-icons/fa'
+import CardInfor from '../components/CardInfor'
+import { SiBrandfolder } from 'react-icons/si'
+
+import avatar1 from '../data/avatar1.png'
+import avatar2 from '../data/avatar2.png'
+import avatar3 from '../data/avatar3.png'
+import avatar4 from '../data/avatar4.png'
+import { useNavigate } from 'react-router-dom'
+import Bar from '../components/Charts/Bar'
 
 const DropDown = ({ currentMode }) => (
   <div className='w-28 border-1 border-color px-2 py-1 rounded-md'>
@@ -32,16 +40,70 @@ const DropDown = ({ currentMode }) => (
   </div>
 )
 
-const Analytics = () => {
-  const { currentColor, currentMode } = useStateContext()
-  // const { posts } = useGetData()
+const RecenPostItem = ({ imageSrc, name, brand, model, cusName }) => (
+  <div className='grid grid-cols-5 gap-2 font-semibold hover:bg-[#e8e8e8] rounded-[16px]'>
+    <div className='overflow-hidden rounded-[16px] w-fit h-[80px]'>
+      <img src={imageSrc} alt='recent-post-item' className='w-[100px] h-full  object-cover' />
+    </div>
+    <div className='flex flex-1 w-full items-center'>
+      <span className='text-sm font-semibold truncate'>{name}</span>
+    </div>
+    <div className='flex items-center'>
+      <span className='text-sm font-semibold'>{brand}</span>
+    </div>
+    <div className='flex items-center'>
+      <span className='text-sm font-semibold'>{model}</span>
+    </div>
+    <div className='flex items-center pr-2'>
+      <span className='text-sm font-semibold truncate'>{cusName}</span>
+    </div>
+  </div>
+)
 
-  // console.log(posts)
+const NewestCustomer = ({ imageSrc, name }) => {
+  const avatar = getNumberFromId(imageSrc)
+
+  let img = null
+
+  switch (avatar) {
+    case 1:
+      img = avatar1
+      break
+    case 2:
+      img = avatar2
+      break
+    case 3:
+      img = avatar3
+      break
+    case 4:
+      img = avatar4
+      break
+    default:
+      img = avatar1
+  }
 
   return (
-    <div className='mt-12'>
-      <div className='flex flex-wrap lg:flex-nowrap justify-center '>
-        <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg h-44 rounded-xl w-full lg:w-80 p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center'>
+    <div className='flex items-center justify-between gap-3 font-semibold hover:bg-[#e8e8e8] rounded-[16px]'>
+      <div className='overflow-hidden rounded-[16px] w-fit h-[80px]'>
+        <img src={img} alt='recent-post-item' className='w-[100px] h-full  object-cover' />
+      </div>
+      <div className='flex flex-1 w-full justify-center'>
+        <span className='text-sm font-semibold truncate'>{name}</span>
+      </div>
+    </div>
+  )
+}
+
+const Analytics = () => {
+  const { currentColor } = useStateContext()
+  const { posts, brands, latestPost } = useGetData()
+  const navigate = useNavigate()
+
+  return (
+    posts.length > 0 && (
+      <div className='mt-12'>
+        <div className='flex flex-wrap lg:flex-nowrap justify-center mx-[5.5rem]'>
+          {/* <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg h-44 rounded-xl w-full lg:w-80 p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center'>
           <div className='flex justify-between items-center'>
             <div>
               <p className='font-bold text-gray-400'>Earnings</p>
@@ -58,286 +120,179 @@ const Analytics = () => {
           <div className='mt-6'>
             <Button color='white' bgColor={currentColor} text='Download' borderRadius='10px' />
           </div>
-        </div>
-        <div className='flex m-3 flex-wrap justify-center gap-1 items-center'>
-          {earningData.map((item) => (
-            <div
-              key={item.title}
-              className='bg-white h-44 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-56  p-4 pt-9 rounded-2xl '
+        </div> */}
+          <div className='flex flex-wrap justify-between gap-4 items-center w-full '>
+            {/* <div className='bg-white h-44 dark:text-gray-200 dark:bg-secondary-dark-bg md:w-fit flex-1  p-4 pt-9 rounded-2xl '>
+            <button
+              type='button'
+              className='text-2xl opacity-0.9 rounded-full  p-4 hover:drop-shadow-xl '
             >
-              <button
-                type='button'
-                style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                className='text-2xl opacity-0.9 rounded-full  p-4 hover:drop-shadow-xl'
-              >
-                {item.icon}
-              </button>
-              <p className='mt-3'>
-                <span className='text-lg font-semibold'>{item.amount}</span>
-                <span className={`text-sm text-${item.pcColor} ml-2`}>{item.percentage}</span>
-              </p>
-              <p className='text-sm text-gray-400  mt-1'>{item.title}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className='flex gap-10 flex-wrap justify-center'>
-        <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg m-3 p-4 rounded-2xl md:w-780  '>
-          <div className='flex justify-between'>
-            <p className='font-semibold text-xl'>Revenue Updates</p>
-            <div className='flex items-center gap-4'>
-              <p className='flex items-center gap-2 text-gray-600 hover:drop-shadow-xl'>
-                <span>
-                  <GoPrimitiveDot />
-                </span>
-                <span>Expense</span>
-              </p>
-              <p className='flex items-center gap-2 text-green-400 hover:drop-shadow-xl'>
-                <span>
-                  <GoPrimitiveDot />
-                </span>
-                <span>Budget</span>
-              </p>
-            </div>
+              <FaCar />
+            </button>
+            <span className='font-semibold'>Total Cars</span>
+            <p className='mt-3'>
+              <span className='text-lg font-semibold'></span>
+            </p>
+            <p className='text-sm text-gray-400  mt-1'>Cars</p>
+          </div> */}
+            <CardInfor
+              title='Total Cars'
+              body={posts.length}
+              subTitle='Cars'
+              icon={<FaCar className='w-12 h-12' />}
+              className='text-[rgb(255,244,229)] bg-[rgb(254,201,15)] w-1/4'
+            />
+            <CardInfor
+              title='Total Brands'
+              body={brands.car_brands ? brands.car_brands.length : 0}
+              subTitle='Brands'
+              icon={<SiBrandfolder className='w-12 h-12' />}
+              className='text-[rgb(255,244,229)] bg-[rgb(228,106,118)] w-1/4'
+            />
+            <CardInfor
+              title='Total Customer'
+              body={120}
+              subTitle='Customers'
+              icon={<IoMdPerson className='w-12 h-12' />}
+              className='text-[#E5FAFB] bg-[#03C9D7] w-1/4'
+            />
+            <CardInfor
+              title='Total Staff'
+              body={10}
+              subTitle='Staffs'
+              icon={<FaUserTie className='w-12 h-12' />}
+              className='text-[rgb(235,250,242)] bg-[rgb(0,194,146)] w-1/4'
+            />
           </div>
-          <div className='mt-10 flex gap-10 flex-wrap justify-center'>
-            <div className=' border-r-1 border-color m-4 pr-10'>
-              <div>
-                <p>
-                  <span className='text-3xl font-semibold'>$93,438</span>
-                  <span className='p-1.5 hover:drop-shadow-xl cursor-pointer rounded-full text-white bg-green-400 ml-3 text-xs'>
-                    23%
-                  </span>
-                </p>
-                <p className='text-gray-500 mt-1'>Budget</p>
-              </div>
-              <div className='mt-8'>
-                <p className='text-3xl font-semibold'>$48,487</p>
+        </div>
 
-                <p className='text-gray-500 mt-1'>Expense</p>
-              </div>
-
-              <div className='mt-5'>
-                <SparkLine
-                  currentColor={currentColor}
-                  id='line-sparkLine'
-                  type='Line'
-                  height='80px'
-                  width='250px'
-                  data={SparklineAreaData}
-                  color={currentColor}
+        <div className='flex gap-10 m-4 flex-wrap justify-center'>
+          <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-6 rounded-2xl w-96 md:w-760'>
+            <div className='flex justify-between items-center gap-2 mb-6'>
+              <p className='text-xl font-semibold'>Recent Posts</p>
+            </div>
+            <div className='grid grid-cols-5 gap-2 font-bold'>
+              <div></div>
+              <div>Name</div>
+              <div>Brands</div>
+              <div>Model</div>
+              <div>Customer</div>
+            </div>
+            <div className='md:w-full overflow-auto flex flex-col gap-2'>
+              {[...latestPost.slice(0, 5)].map((post, index) => (
+                <RecenPostItem
+                  key={'recent-post-' + index}
+                  imageSrc={post.car.car_galleries[0].gallery_url}
+                  name={post.car.car_name}
+                  brand={post.car.car_brand}
+                  model={post.car.car_model}
+                  cusName={post.customer.first_name + ' ' + post.customer.last_name}
+                />
+              ))}
+            </div>
+            <div className='flex justify-between items-center mt-5 border-t-1 border-color'>
+              <div className='mt-3'>
+                <Button
+                  color='white'
+                  bgColor={currentColor}
+                  text='View All'
+                  borderRadius='10px'
+                  className='px-8'
+                  onClick={() => navigate('/posts')}
                 />
               </div>
-              <div className='mt-10'>
-                <Button color='white' bgColor={currentColor} text='Download Report' borderRadius='10px' />
+              <p className='text-gray-400 text-sm'>{latestPost.length} Recent Post Car</p>
+            </div>
+          </div>
+          <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-6 rounded-2xl'>
+            <div className='flex justify-between items-center gap-2'>
+              <p className='text-xl font-semibold'>Newest Customers</p>
+            </div>
+            <div className='mt-6 w-72 md:w-400 flex flex-col gap-2'>
+              <div className='grid grid-cols-2 gap-2 font-bold'>
+                <div></div>
+                <div>Full name</div>
               </div>
-            </div>
-            <div>
-              <Stacked currentMode={currentMode} width='320px' height='360px' />
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className=' rounded-2xl md:w-400 p-4 m-3' style={{ backgroundColor: currentColor }}>
-            <div className='flex justify-between items-center '>
-              <p className='font-semibold text-white text-2xl'>Earnings</p>
-
-              <div>
-                <p className='text-2xl text-white font-semibold mt-8'>$63,448.78</p>
-                <p className='text-gray-200'>Monthly revenue</p>
-              </div>
-            </div>
-
-            <div className='mt-4'>
-              <SparkLine
-                currentColor={currentColor}
-                id='column-sparkLine'
-                height='100px'
-                type='Column'
-                data={SparklineAreaData}
-                width='320'
-                color='rgb(242, 252, 253)'
-              />
-            </div>
-          </div>
-
-          <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl md:w-400 p-8 m-3 flex justify-center items-center gap-10'>
-            <div>
-              <p className='text-2xl font-semibold '>$43,246</p>
-              <p className='text-gray-400'>Yearly sales</p>
-            </div>
-
-            <div className='w-40'>
-              <Pie id='pie-chart' data={ecomPieChartData} legendVisiblity={false} height='160px' />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className='flex gap-10 m-4 flex-wrap justify-center'>
-        <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-6 rounded-2xl'>
-          <div className='flex justify-between items-center gap-2'>
-            <p className='text-xl font-semibold'>Recent Transactions</p>
-            <DropDown currentMode={currentMode} />
-          </div>
-          <div className='mt-10 w-72 md:w-400'>
-            {recentTransactions.map((item) => (
-              <div key={item.title} className='flex justify-between mt-4'>
-                <div className='flex gap-4'>
-                  <button
-                    type='button'
-                    style={{
-                      color: item.iconColor,
-                      backgroundColor: item.iconBg,
-                    }}
-                    className='text-2xl rounded-lg p-4 hover:drop-shadow-xl'
-                  >
-                    {item.icon}
-                  </button>
-                  <div>
-                    <p className='text-md font-semibold'>{item.title}</p>
-                    <p className='text-sm text-gray-400'>{item.desc}</p>
-                  </div>
-                </div>
-                <p className={`text-${item.pcColor}`}>{item.amount}</p>
-              </div>
-            ))}
-          </div>
-          <div className='flex justify-between items-center mt-5 border-t-1 border-color'>
-            <div className='mt-3'>
-              <Button color='white' bgColor={currentColor} text='Add' borderRadius='10px' />
-            </div>
-
-            <p className='text-gray-400 text-sm'>36 Recent Transactions</p>
-          </div>
-        </div>
-        <div className='bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-6 rounded-2xl w-96 md:w-760'>
-          <div className='flex justify-between items-center gap-2 mb-10'>
-            <p className='text-xl font-semibold'>Sales Overview</p>
-            <DropDown currentMode={currentMode} />
-          </div>
-          <div className='md:w-full overflow-auto'>
-            <LineChart />
-          </div>
-        </div>
-      </div>
-
-      <div className='flex flex-wrap justify-center'>
-        <div className='md:w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3'>
-          <div className='flex justify-between'>
-            <p className='text-xl font-semibold'>Weekly Stats</p>
-            <button type='button' className='text-xl font-semibold text-gray-500'>
-              <IoIosMore />
-            </button>
-          </div>
-
-          <div className='mt-10 '>
-            {weeklyStats.map((item) => (
-              <div key={item.title} className='flex justify-between mt-4 w-full'>
-                <div className='flex gap-4'>
-                  <button
-                    type='button'
-                    style={{ background: item.iconBg }}
-                    className='text-2xl hover:drop-shadow-xl text-white rounded-full p-3'
-                  >
-                    {item.icon}
-                  </button>
-                  <div>
-                    <p className='text-md font-semibold'>{item.title}</p>
-                    <p className='text-sm text-gray-400'>{item.desc}</p>
-                  </div>
-                </div>
-
-                <p className={`text-${item.pcColor}`}>{item.amount}</p>
-              </div>
-            ))}
-            <div className='mt-4'>
-              <SparkLine
-                currentColor={currentColor}
-                id='area-sparkLine'
-                height='160px'
-                type='Area'
-                data={SparklineAreaData}
-                width='320'
-                color='rgb(242, 252, 253)'
-              />
-            </div>
-          </div>
-        </div>
-        <div className='w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3'>
-          <div className='flex justify-between'>
-            <p className='text-xl font-semibold'>MedicalPro Branding</p>
-            <button type='button' className='text-xl font-semibold text-gray-400'>
-              <IoIosMore />
-            </button>
-          </div>
-          <p className='text-xs cursor-pointer hover:drop-shadow-xl font-semibold rounded-lg w-24 bg-orange-400 py-0.5 px-2 text-gray-200 mt-10'>
-            16 APR, 2021
-          </p>
-
-          <div className='flex gap-4 border-b-1 border-color mt-6'>
-            {medicalproBranding.data.map((item) => (
-              <div key={item.title} className='border-r-1 border-color pr-4 pb-2'>
-                <p className='text-xs text-gray-400'>{item.title}</p>
-                <p className='text-sm'>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className='border-b-1 border-color pb-4 mt-2'>
-            <p className='text-md font-semibold mb-2'>Teams</p>
-
-            <div className='flex gap-4'>
-              {medicalproBranding.teams.map((item) => (
-                <p
-                  key={item.name}
-                  style={{ background: item.color }}
-                  className='cursor-pointer hover:drop-shadow-xl text-white py-0.5 px-3 rounded-lg text-xs'
-                >
-                  {item.name}
-                </p>
+              {[...posts.slice(-5)].map((post, index) => (
+                <NewestCustomer
+                  key={'newest-customer-' + index}
+                  imageSrc={post.id}
+                  name={post.customer.first_name + ' ' + post.customer.last_name}
+                />
               ))}
             </div>
-          </div>
-          <div className='mt-2'>
-            <p className='text-md font-semibold mb-2'>Leaders</p>
-            <div className='flex gap-4'>
-              {medicalproBranding.leaders.map((item, index) => (
-                <img key={index} className='rounded-full w-8 h-8' src={item.image} alt='' />
-              ))}
-            </div>
-          </div>
-          <div className='flex justify-between items-center mt-5 border-t-1 border-color'>
-            <div className='mt-3'>
-              <Button color='white' bgColor={currentColor} text='Add' borderRadius='10px' />
-            </div>
-
-            <p className='text-gray-400 text-sm'>36 Recent Transactions</p>
-          </div>
-        </div>
-        <div className='w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3'>
-          <div className='flex justify-between'>
-            <p className='text-xl font-semibold'>Daily Activities</p>
-            <button type='button' className='text-xl font-semibold text-gray-500'>
-              <IoIosMore />
-            </button>
-          </div>
-          <div className='mt-10'>
-            <img className='md:w-96 h-50 ' src={product9} alt='' />
-            <div className='mt-8'>
-              <p className='font-semibold text-lg'>React 18 coming soon!</p>
-              <p className='text-gray-400 '>By Johnathan Doe</p>
-              <p className='mt-8 text-sm text-gray-400'>
-                This will be the small description for the news you have shown here. There could be some great info.
-              </p>
+            <div className='flex justify-between items-center mt-5 border-t-1 border-color'>
               <div className='mt-3'>
-                <Button color='white' bgColor={currentColor} text='Read More' borderRadius='10px' />
+                <Button
+                  onClick={() => navigate('/posts')}
+                  color='white'
+                  bgColor={currentColor}
+                  text='View Customers'
+                  borderRadius='10px'
+                />
               </div>
+              <p className='text-gray-400 text-sm'>10 Newest Customers</p>
+            </div>
+          </div>
+        </div>
+        <div className='grid grid-cols-2 m-8 gap-10 px-11'>
+          <div className=' p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl'>
+            <div className='w-full'>
+              <p className='text-center dark:text-gray-200 text-xl mb-2 mt-3'>Distribution of brands in the system</p>
+              <Pie
+                name='Brand'
+                id='chart-pie-1'
+                data={calculateBrandPercentages(posts)}
+                legendVisiblity
+                height='full'
+                className='w-full'
+              />
+            </div>
+          </div>
+          <div className=' p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl'>
+            <div className='w-full'>
+              <p className='text-center dark:text-gray-200 text-xl mb-2 mt-3 capitalize'>
+                Vehicle allocation percentage by cities
+              </p>
+              <Pie
+                name='City'
+                id='chart-pie-2'
+                data={calculateCityPercentages(posts)}
+                legendVisiblity
+                height='full'
+                className='w-full'
+              />
+            </div>
+          </div>
+          <div className=' p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl'>
+            <div className='w-full'>
+              <p className='text-center dark:text-gray-200 text-xl mb-2 mt-3 capitalize'>
+                Distribution of vehicles by engine type
+              </p>
+              <Pie
+                name='Engine Type'
+                id='chart-pie-3'
+                data={calculateFuelPercentages(posts).reverse()}
+                legendVisiblity
+                height='full'
+                className='w-full'
+              />
+            </div>
+          </div>
+          <div className=' p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl'>
+            <div className='w-full'>
+              <p className='text-center dark:text-gray-200 text-xl mb-2 mt-3 capitalize'>Distribution of car type</p>
+              <Bar
+                data={calculateBodyTypePercentages(posts)}
+                titleChart='Body Type (In Percentage)'
+                titleHeading=''
+                nameColumn='Type Percentage'
+              />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    )
   )
 }
 

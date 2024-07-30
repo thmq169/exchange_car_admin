@@ -1,18 +1,37 @@
 import React, { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../hooks/hook'
-import { selectUser } from '../store/reducers/auth-slice'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
+import { selectUser, selectUserToken, setUserToken } from '../store/reducers/auth-slice'
 import Logo from '../icons/Logo'
+import { getUserProfile } from '../store/actions/auth.action'
 
 const AuthLayout = () => {
   const navigate = useNavigate()
+  const userToken = useAppSelector(selectUserToken)
   const user = useAppSelector(selectUser)
+  const dispatch = useAppDispatch()
+
+  const fetchUser = async (access_token) => {
+    await dispatch(getUserProfile({ access_token: access_token }))
+  }
 
   useEffect(() => {
-    if (user) {
-      navigate('/')
+    const token = localStorage.getItem('access_token')
+    if (token !== null) {
+      dispatch(setUserToken(token))
+      fetchUser(token)
     }
-  }, [navigate, user])
+  }, [navigate, dispatch, userToken])
+
+  useEffect(() => {
+    if (userToken !== null && user !== null) {
+      if (user.user_roles.includes('Admin')) {
+        navigate('/analytics')
+      } else if (user.user_roles.includes('Individual Customer')) {
+        navigate('/cars')
+      }
+    }
+  }, [user, userToken, navigate])
 
   return (
     <>
@@ -31,12 +50,12 @@ const AuthLayout = () => {
         <img
           src='/images/login/left-financial.svg'
           alt='left-financial'
-          className='absolute bottom-0 left-0 w-[30rem]'
+          className='absolute bottom-0 left-0 w-[30rem] drop-shadow-xl'
         />
         <img
           src='/images/login/right-financial.svg'
           alt='right-financial'
-          className='absolute bottom-0 right-0 w-[30rem]'
+          className='absolute bottom-0 right-0 w-[30rem] drop-shadow-xl'
         />
       </div>
     </>

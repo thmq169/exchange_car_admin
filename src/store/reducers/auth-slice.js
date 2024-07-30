@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userLogin } from '../actions/auth.action'
+import { getUserProfile, userLogin } from '../actions/auth.action'
 
 const initialState = {
   loading: false,
@@ -19,16 +19,23 @@ const authSlice = createSlice({
     setUserToken: (state, action) => {
       state.userToken = action.payload
     },
+    setLoading: (state, action) => {
+      state.loading = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
+      state.userToken = action.payload
+    })
+    builder.addCase(getUserProfile.fulfilled, (state, action) => {
       state.user = action.payload
     })
   },
 })
 
-export const { setUser, setUserToken } = authSlice.actions
+export const { setUser, setUserToken, setLoading } = authSlice.actions
 
 export const selectUser = (state) => state.auth.user
+export const selectUserToken = (state) => state.auth.userToken
 
 export default authSlice.reducer

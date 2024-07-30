@@ -1,10 +1,19 @@
-import React from 'react';
-import { AccumulationChartComponent, AccumulationSeriesCollectionDirective, AccumulationSeriesDirective, AccumulationLegend, PieSeries, AccumulationDataLabel, Inject, AccumulationTooltip } from '@syncfusion/ej2-react-charts';
+import React from 'react'
+import {
+  AccumulationChartComponent,
+  AccumulationSeriesCollectionDirective,
+  AccumulationSeriesDirective,
+  AccumulationLegend,
+  PieSeries,
+  AccumulationDataLabel,
+  Inject,
+  AccumulationTooltip,
+} from '@syncfusion/ej2-react-charts'
 
-import { useStateContext } from '../../contexts/ContextProvider';
+import { useStateContext } from '../../contexts/ContextProvider'
 
-const Doughnut = ({ id, data, legendVisiblity, height }) => {
-  const { currentMode } = useStateContext();
+const Doughnut = ({ name, id, data, legendVisiblity, height, className }) => {
+  const { currentMode } = useStateContext()
 
   return (
     <AccumulationChartComponent
@@ -13,20 +22,21 @@ const Doughnut = ({ id, data, legendVisiblity, height }) => {
       height={height}
       background={currentMode === 'Dark' ? '#33373E' : '#fff'}
       tooltip={{ enable: true }}
+      className={className}
     >
       <Inject services={[AccumulationLegend, PieSeries, AccumulationDataLabel, AccumulationTooltip]} />
       <AccumulationSeriesCollectionDirective>
         <AccumulationSeriesDirective
-          name="Sale"
+          name={name}
           dataSource={data}
-          xName="x"
-          yName="y"
-          innerRadius="40%"
+          xName='x'
+          yName='y'
+          innerRadius='40%'
           startAngle={0}
           endAngle={360}
-          radius="70%"
+          radius='70%'
           explode
-          explodeOffset="10%"
+          explodeOffset='10%'
           explodeIndex={2}
           dataLabel={{
             visible: true,
@@ -40,7 +50,7 @@ const Doughnut = ({ id, data, legendVisiblity, height }) => {
         />
       </AccumulationSeriesCollectionDirective>
     </AccumulationChartComponent>
-  );
-};
+  )
+}
 
-export default Doughnut;
+export default Doughnut

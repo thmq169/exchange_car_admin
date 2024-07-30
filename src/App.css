@@ -87,3 +87,67 @@
     1px 25px 35px rgba(16, 16, 16, 0.2),
     1px 30px 60px rgba(16, 16, 16, 0.4);
 }
+
+/* Swiper */
+
+.CitiCar-DetailImagesInfor .swiper-slide-thumb-active .thumb-image {
+  @apply border-[#f97316] border-[3px] rounded-2xl;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-prev,
+.CitiCar-DetailImagesInfor .swiper-button-next {
+  @apply text-gray-50 hidden;
+}
+
+.CitiCar-DetailImagesInfor .swiper-detail-main:hover .swiper-button-prev,
+.CitiCar-DetailImagesInfor .swiper-detail-main:hover .swiper-button-next,
+.CitiCar-DetailImagesInfor .swiper-detail-thumb:hover .swiper-button-prev,
+.CitiCar-DetailImagesInfor .swiper-detail-thumb:hover .swiper-button-next {
+  @apply flex;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-prev.swiper-button-disabled,
+.CitiCar-DetailImagesInfor .swiper-button-next.swiper-button-disabled {
+  @apply !hidden;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-prev {
+  @apply left-0;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-next {
+  @apply right-0;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-prev::after,
+.CitiCar-DetailImagesInfor .swiper-button-next::after {
+  @apply p-4 bg-opacity-40 bg-[black];
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-prev::after {
+  @apply content-['«'] rounded-r-full left-0;
+}
+
+.CitiCar-DetailImagesInfor .swiper-button-next::after {
+  @apply content-['»'] rounded-l-full right-0;
+}
+
+.CitiCar-DetailImagesInfor .swiper-detail-main .swiper-button-prev::after,
+.CitiCar-DetailImagesInfor .swiper-detail-main .swiper-button-next::after {
+  @apply text-4xl font-extrabold;
+}
+
+.CitiCar-DetailImagesInfor .swiper-detail-thumb .swiper-button-prev::after,
+.CitiCar-DetailImagesInfor .swiper-detail-thumb .swiper-button-next::after {
+  @apply text-2xl font-extrabold p-3;
+}
+
+.CitiCar-DetailImagesInfor img.detai-img {
+  @apply w-5 h-5;
+}
+
+.e-detailcell,
+.e-detailindentcell {
+  border: none !important;
+  padding: 0;
+}

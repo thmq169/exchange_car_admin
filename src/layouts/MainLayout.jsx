@@ -1,21 +1,26 @@
 import React, { useEffect } from 'react'
 import { useStateContext } from '../contexts/ContextProvider'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Navbar, Footer, Sidebar, ThemeSettings } from '../components'
-import { useAppSelector } from '../hooks/hook'
-import { selectUser } from '../store/reducers/auth-slice'
+import { Navbar, Sidebar, ThemeSettings } from '../components'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
+import { selectUserToken, setUserToken } from '../store/reducers/auth-slice'
+import Loading from '../components/Loading'
+import { selectLoading } from '../store/reducers/app-slice'
 
 const MainLayout = () => {
-  const { setCurrentColor, setCurrentMode, currentMode, activeMenu, themeSettings } = useStateContext()
+  const { setCurrentColor, setCurrentMode, activeMenu, themeSettings } = useStateContext()
 
   const navigate = useNavigate()
-  const user = useAppSelector(selectUser)
+  const dispatch = useAppDispatch()
+  const userToken = useAppSelector(selectUserToken)
 
   useEffect(() => {
-    if (!user) {
+    const token = localStorage.getItem('access_token')
+    if (userToken === null || token === null) {
+      dispatch(setUserToken(null))
       navigate('/sign-in')
     }
-  }, [navigate, user])
+  }, [navigate, dispatch, userToken])
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode')
@@ -26,8 +31,11 @@ const MainLayout = () => {
     }
   }, [])
 
+  const loading = useAppSelector(selectLoading)
+
   return (
     <div className='flex relative dark:bg-main-dark-bg'>
+      {loading && <Loading />}
       {activeMenu ? (
         <div className='w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white '>
           <Sidebar />
@@ -44,7 +52,7 @@ const MainLayout = () => {
             : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
         }
       >
-        <div className='fixed md:sticky md:top-0 bg-main-bg dark:bg-main-dark-bg navbar w-full '>
+        <div className='fixed md:sticky md:top-0 bg-main-bg dark:bg-main-dark-bg navbar w-full z-[100]'>
           <Navbar />
         </div>
         <div>
@@ -52,7 +60,6 @@ const MainLayout = () => {
 
           <Outlet />
         </div>
-        <Footer />
       </div>
     </div>
   )

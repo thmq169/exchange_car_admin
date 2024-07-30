@@ -2,10 +2,13 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useAppDispatch } from '../hooks/hook'
-import { setUser } from '../store/reducers/auth-slice'
+import { useState } from 'react'
+import { authService } from '../services/auth.service'
+import { setUser, setUserToken } from '../store/reducers/auth-slice'
+import { getPostsUser } from '../store/actions/post.action'
 
 const schema = yup.object({
-  password: yup.string().required('Password field is required.').min(8, 'Password minimum 8 characters'),
+  password: yup.string().required('Password field is required.').min(6, 'Password minimum 6 characters'),
   phoneNumber: yup
     .string()
     .max(10)
@@ -21,16 +24,36 @@ export default function SignIn() {
     setValue,
     trigger,
   } = useForm({ resolver: yupResolver(schema), mode: 'onChange' })
+  const [isLoading, setIsLoading] = useState(false)
 
   const dispatch = useAppDispatch()
 
   const onInvalid = (errors) => console.error(errors)
 
-  const onHandleSubmit = (data, event) => {
+  const onHandleSubmit = async (data, event) => {
+    setIsLoading(true)
     event.preventDefault()
+
     const { phoneNumber, password } = data
 
-    dispatch(setUser({ phoneNumber, password }))
+    try {
+      const res = await authService.signIn({ mobile_phone: '+84' + phoneNumber, password: password })
+      const access_token = res.data.access_token
+      const userProfile = await authService.getProfile(access_token)
+
+      const values = await Promise.all([res, userProfile])
+
+      if (values[1].status === 200) {
+        localStorage.setItem('access_token', access_token)
+        dispatch(setUserToken(access_token))
+        dispatch(setUser(userProfile.data.data.currentUser))
+        await dispatch(getPostsUser({ customer_id: userProfile.data.data.currentUser.id }))
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const onPhoneNumberChange = (event) => {
@@ -79,7 +102,7 @@ export default function SignIn() {
             type='submit'
             className={`rounded-full bg-[#f97316] text-[#F5F7FF] w-[25rem] p-3 mt-10 hover:bg-opacity-80`}
           >
-            Sign In
+            {isLoading ? ' Wait a minute...' : 'Sign In'}
           </button>
         </div>
       </form>
