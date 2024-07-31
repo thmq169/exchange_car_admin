@@ -303,7 +303,7 @@ const AddPost = () => {
         </div>
         <div className='m-2 mt-10 md:mt-4 md:mx-10 p-2 md:p-10 bg-white rounded-3xl'>
           <div className='flex justify-between items-center'>
-            <Header category='Page' title='Add Post' />
+            <Header category='Page' title='Add Car Post' />
           </div>
           <div>
             <div className='w-full'>
@@ -441,14 +441,16 @@ const AddPost = () => {
                             options={dayPublished}
                             onSelect={(date) => {
                               setFormData((pre) => ({ ...pre, date_published: date }))
-                              setCostDays(calculateCostForPublisDay(Number(date)))
+                              setCostDays(Number(date) * 2000)
                             }}
                             className='z-[44]'
                           />
                           <div></div>
                           <div></div>
                           <div></div>
-                          <div className='text-right text-sm font-semibold italic'>Cost: {costDays} VND</div>
+                          <div className='text-right text-sm font-semibold italic'>
+                            Cost: {Number(costDays).toLocaleString('en-US')} VND
+                          </div>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
                           <button

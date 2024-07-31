@@ -63,7 +63,7 @@ const Car = () => {
           <button
             type='button'
             className={`text-2xl text-white rounded-full p-3 hover:drop-shadow-xl bg-[#f97316] `}
-            onClick={() => navigate('/posts/add-post')}
+            onClick={() => navigate('/cars/add-car')}
           >
             <FaRegPlusSquare className='w-6 h-6' />
           </button>

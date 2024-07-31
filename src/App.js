@@ -32,8 +32,12 @@ const App = () => {
           path: '/posts/:car_slug',
           element: <PostDetail />,
         },
+        // {
+        //   path: '/posts/add-post',
+        //   element: <AddPost />,
+        // },
         {
-          path: '/posts/add-post',
+          path: '/cars/add-car',
           element: <AddPost />,
         },
 
