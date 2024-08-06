@@ -2,7 +2,7 @@ import React from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
-import { Analytics, Line, Area, Bar, Pie, Posts, SignIn, AddPost, Cars } from './pages'
+import { Analytics, Line, Area, Bar, Pie, Posts, SignIn, AddPost, Cars, Calendar } from './pages'
 import './App.css'
 import MainLayout from './layouts/MainLayout'
 import AuthLayout from './layouts/AuthLayout'
@@ -73,10 +73,10 @@ const App = () => {
           path: '/cars',
           element: <Cars />,
         },
-        // {
-        //   path: '/color-mapping',
-        //   element: <ColorMapping />,
-        // },
+        {
+          path: '/calendars',
+          element: <Calendar />,
+        },
         // {
         //   path: '/pyramid',
         //   element: <Pyramid />,
