@@ -5,7 +5,8 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'
 
 import { useStateContext } from '../contexts/ContextProvider'
-import useGetData from '../hooks/use-get-data'
+import { useAppSelector } from '../hooks/hook'
+import { selectUser } from '../store/reducers/auth-slice'
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position='BottomCenter'>
@@ -24,6 +25,8 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
 const Navbar = () => {
   const { currentColor, activeMenu, setActiveMenu, handleClick, isClicked, setScreenSize, screenSize } =
     useStateContext()
+
+  const user = useAppSelector(selectUser)
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth)
@@ -44,8 +47,6 @@ const Navbar = () => {
   }, [screenSize])
 
   const handleActiveMenu = () => setActiveMenu(!activeMenu)
-
-  const { user } = useGetData()
 
   return (
     <div className='flex justify-between p-2 md:ml-6 md:mr-6 relative'>

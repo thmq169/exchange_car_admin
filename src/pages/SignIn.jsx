@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { authService } from '../services/auth.service'
 import { setUser, setUserToken } from '../store/reducers/auth-slice'
 import { getPostsUser } from '../store/actions/post.action'
+import { setLoading } from '../store/reducers/app-slice'
 
 const schema = yup.object({
   password: yup.string().required('Password field is required.').min(6, 'Password minimum 6 characters'),
@@ -35,6 +36,7 @@ export default function SignIn() {
     event.preventDefault()
 
     const { phoneNumber, password } = data
+    dispatch(setLoading(true))
 
     try {
       const res = await authService.signIn({ mobile_phone: '+84' + phoneNumber, password: password })
@@ -52,7 +54,7 @@ export default function SignIn() {
     } catch (error) {
       console.log(error)
     } finally {
-      setIsLoading(false)
+      dispatch(setLoading(false))
     }
   }
 

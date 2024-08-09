@@ -6,7 +6,7 @@ const initialState = {
   post: null,
   latestPost: [],
   queryTable: null,
-  postsUser: [],
+  postsUser: null,
 }
 
 export const postSlice = createSlice({

@@ -3,9 +3,10 @@ import { useStateContext } from '../contexts/ContextProvider'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Navbar, Sidebar, ThemeSettings } from '../components'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
-import { selectUserToken, setUserToken } from '../store/reducers/auth-slice'
-import Loading from '../components/Loading'
+import { selectUser, selectUserToken, setUser, setUserToken } from '../store/reducers/auth-slice'
+import { authService } from '../services/auth.service'
 import { selectLoading } from '../store/reducers/app-slice'
+import Loading from '../components/Loading'
 
 const MainLayout = () => {
   const { setCurrentColor, setCurrentMode, activeMenu, themeSettings } = useStateContext()
@@ -13,10 +14,50 @@ const MainLayout = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const userToken = useAppSelector(selectUserToken)
+  const user = useAppSelector(selectUser)
+  const loading = useAppSelector(selectLoading)
+
+  const fetchUser = async (access_token) => {
+    const res = await authService.getProfile(access_token)
+    const user = res.data.data.currentUser
+    dispatch(setUser(user))
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+
+    const accessToken = params.get('token')
+    const origin = params.get('origin')
+
+    if (accessToken !== 'null' && accessToken !== null) {
+      dispatch(setUserToken(accessToken))
+      fetchUser(accessToken)
+      localStorage.setItem('access_token', accessToken)
+      localStorage.setItem('origin', origin)
+    } else if (accessToken === 'null') {
+      navigate('/sign-in')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (userToken !== null && user !== null) {
+      if (user.user_roles.includes('Admin')) {
+        navigate('/analytics')
+      } else if (user.user_roles.includes('Individual Customer')) {
+        navigate('/cars')
+      }
+    }
+  }, [user, userToken, navigate])
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
-    if (userToken === null || token === null) {
+    if (token !== null) {
+      dispatch(setUserToken(token))
+      fetchUser(token)
+      return
+    }
+
+    if (token === null && userToken === null) {
       dispatch(setUserToken(null))
       navigate('/sign-in')
     }
@@ -31,37 +72,37 @@ const MainLayout = () => {
     }
   }, [])
 
-  const loading = useAppSelector(selectLoading)
-
   return (
-    <div className='flex relative dark:bg-main-dark-bg'>
+    <>
       {loading && <Loading />}
-      {activeMenu ? (
-        <div className='w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white '>
-          <Sidebar />
-        </div>
-      ) : (
-        <div className='w-0 dark:bg-secondary-dark-bg'>
-          <Sidebar />
-        </div>
-      )}
-      <div
-        className={
-          activeMenu
-            ? 'dark:bg-main-dark-bg  bg-main-bg min-h-screen md:ml-72 w-full  '
-            : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
-        }
-      >
-        <div className='fixed md:sticky md:top-0 bg-main-bg dark:bg-main-dark-bg navbar w-full z-[100]'>
-          <Navbar />
-        </div>
-        <div>
-          {themeSettings && <ThemeSettings />}
+      <div className='flex relative dark:bg-main-dark-bg'>
+        {activeMenu ? (
+          <div className='w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white '>
+            <Sidebar />
+          </div>
+        ) : (
+          <div className='w-0 dark:bg-secondary-dark-bg'>
+            <Sidebar />
+          </div>
+        )}
+        <div
+          className={
+            activeMenu
+              ? 'dark:bg-main-dark-bg  bg-main-bg min-h-screen md:ml-72 w-full  '
+              : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
+          }
+        >
+          <div className='fixed md:sticky md:top-0 bg-main-bg dark:bg-main-dark-bg navbar w-full z-[100]'>
+            <Navbar />
+          </div>
+          <div>
+            {themeSettings && <ThemeSettings />}
 
-          <Outlet />
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

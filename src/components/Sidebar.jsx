@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 // import { SiShopware } from 'react-icons/si';
 import { MdOutlineCancel } from 'react-icons/md'
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'
@@ -14,6 +14,7 @@ import { selectUser, setUserToken } from '../store/reducers/auth-slice.js'
 const Sidebar = () => {
   const { currentColor, activeMenu, setActiveMenu, screenSize, setIsClicked, initialState } = useStateContext()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const user = useAppSelector(selectUser)
 
   // const fetchUser = async (access_token) => {
@@ -35,6 +36,13 @@ const Sidebar = () => {
     dispatch(setUserToken(null))
     localStorage.removeItem('access_token')
     setIsClicked(initialState)
+
+    // const origin = localStorage.getItem('origin')
+    // if (origin) {
+    //   localStorage.removeItem('origin')
+    //   window.location.replace(origin)
+    // }
+    navigate('/sign-in')
   }
 
   const activeLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-xl  text-white  text-md m-2'

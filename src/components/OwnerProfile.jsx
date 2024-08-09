@@ -11,15 +11,16 @@ import { BsFillPinMapFill, BsFillTelephoneFill } from 'react-icons/bs'
 import { FaMailBulk, FaMapMarkedAlt } from 'react-icons/fa'
 import { MdLocationCity } from 'react-icons/md'
 import { FiCreditCard } from 'react-icons/fi'
-import { useAppDispatch } from '../hooks/hook'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { setLoading } from '../store/reducers/app-slice'
-import { setUser } from '../store/reducers/auth-slice'
+import { selectUser, setUser } from '../store/reducers/auth-slice'
 import { customerService } from '../services/customer.service'
 import { authService } from '../services/auth.service'
 import { showToastError, showToastSuccess } from '../helpers'
 
 const OwnerDetail = ({ customer, enableUpdate = false }) => {
   const dispatch = useAppDispatch()
+  const user = useAppSelector(selectUser)
   const [defaultAvatar, setDefaultAvatar] = useState(null)
   const [avatar, setAvatar] = useState(null)
   const [updateField, setUpdateField] = useState(false)
@@ -183,7 +184,7 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
                   />
                   <DetailTag
                     heading='City'
-                    description={owner.city}
+                    description={owner.city_address}
                     icon={<MdLocationCity className='w-5 h-5' />}
                     isUpdate={updateField}
                     name='city_address'
@@ -191,7 +192,7 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
                   />
                   <DetailTag
                     heading='District'
-                    description={owner.city}
+                    description={owner.district_address}
                     icon={<BsFillPinMapFill className='w-5 h-5' />}
                     isUpdate={updateField}
                     name='district_address'

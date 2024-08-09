@@ -5,8 +5,7 @@ import { useAppDispatch, useAppSelector } from './hook'
 import { selectBrands } from '../store/reducers/car-slice'
 import { getBrands } from '../store/actions/car.action'
 import { getLatestPost, getPosts, getQueryTable } from '../store/actions/post.action'
-import { selectUser, setUser } from '../store/reducers/auth-slice'
-import { authService } from '../services/auth.service'
+import { selectUser } from '../store/reducers/auth-slice'
 import { useNavigate } from 'react-router-dom'
 
 const useGetData = () => {
@@ -72,22 +71,22 @@ const useGetData = () => {
     }
   }, [brands, dispatch])
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const access_token = localStorage.getItem('access_token')
-        const userProfile = await authService.getProfile(access_token)
-        dispatch(setUser(userProfile.data.data.currentUser))
-      } catch (error) {
-        navigate('/sign-in')
-        localStorage.removeItem('access_token')
-        console.log('Log - error:', error)
-      }
-    }
-    if (user === null) {
-      fetchUser()
-    }
-  }, [user, dispatch])
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const access_token = localStorage.getItem('access_token')
+  //       const userProfile = await authService.getProfile(access_token)
+  //       dispatch(setUser(userProfile.data.data.currentUser))
+  //     } catch (error) {
+  //       // navigate('/sign-in')
+  //       // localStorage.removeItem('access_token')
+  //       console.log('Log - error:', error)
+  //     }
+  //   }
+  //   if (user === null) {
+  //     fetchUser()
+  //   }
+  // }, [user, dispatch])
 
   return useMemo(
     () => ({ posts, post, brands, latestPost, queryTable, user }),

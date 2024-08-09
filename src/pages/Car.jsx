@@ -44,16 +44,18 @@ const Car = () => {
     await dispatch(getPostsUser({ customer_id: user.id }))
   }
 
+  console.log(postsUser)
+
   useEffect(() => {
     if (user == null) {
       fetchUser()
       return
     }
 
-    if (postsUser === null || postsUser.length === 0) {
+    if (postsUser === null) {
       getListPostsUser()
     }
-  }, [user, postsUser, fetchUser, getListPostsUser])
+  }, [user, postsUser, fetchUser])
 
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
