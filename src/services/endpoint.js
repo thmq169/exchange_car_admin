@@ -19,7 +19,10 @@ export const UPDATE_PASSWORD = `${APP}/${AUTH_SERVICE}/change-password`
 
 // customers
 export const UPDATE_PROFILE = `${APP}/${CUSTOMER_SERVICE}/me`
-export const GET_PROFILE = `${APP}/customers/me`
+export const GET_PROFILE = `${APP}/${CUSTOMER_SERVICE}/me`
+export const GET_WISHLIST = `${APP}/${CUSTOMER_SERVICE}/wishlist`
+export const ADD_WISHLIST = `${APP}/${CUSTOMER_SERVICE}/wishlist`
+export const REMOVE_WISHLIST = `${APP}/${CUSTOMER_SERVICE}/wishlist`
 
 // cars
 export const GET_BRANDS = `${APP}/${CAR_SERVICE}/brands`

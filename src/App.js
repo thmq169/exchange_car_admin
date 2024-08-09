@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import PostDetail from './pages/PostDetail'
 import Profile from './pages/Profile'
+import WishList from './pages/WishList'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -32,6 +33,10 @@ const App = () => {
           path: '/posts/:car_slug',
           element: <PostDetail />,
         },
+        {
+          path: '/wishlist/:car_slug',
+          element: <PostDetail />,
+        },
         // {
         //   path: '/posts/add-post',
         //   element: <AddPost />,
@@ -45,10 +50,10 @@ const App = () => {
           path: '/profile',
           element: <Profile />,
         },
-        // {
-        //   path: '/employees',
-        //   element: <Employees />,
-        // },
+        {
+          path: '/wishlist',
+          element: <WishList />,
+        },
         // {
         //   path: '/customers',
         //   element: <Customers />,

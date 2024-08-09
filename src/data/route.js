@@ -1,5 +1,5 @@
 import { AiOutlineAreaChart, AiOutlineBarChart, AiOutlineProfile, AiOutlineStock } from 'react-icons/ai'
-import { FaCar, FaCarAlt, FaRegCalendarAlt } from 'react-icons/fa'
+import { FaBookmark, FaCar, FaCarAlt, FaRegCalendarAlt } from 'react-icons/fa'
 import { FiPieChart } from 'react-icons/fi'
 import { SiGoogleanalytics } from 'react-icons/si'
 
@@ -59,6 +59,10 @@ export const links = [
       {
         name: 'cars',
         icon: <FaCar />,
+      },
+      {
+        name: 'wishlist',
+        icon: <FaBookmark />,
       },
       {
         name: 'profile',

@@ -21,15 +21,13 @@ import { Header } from '../components'
 import useGetData from '../hooks/use-get-data'
 import { postGrid } from '../components/GridTable/post'
 import PostDetail from './PostDetail'
-import { useNavigate } from 'react-router-dom'
 
 const Post = () => {
   const { posts } = useGetData()
-  const navigate = useNavigate()
   const filterSettings = { type: 'Excel' }
   const editing = { allowDeleting: true, allowEditing: true }
   const toolbarOptions = ['Search']
-  console.log(posts)
+
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
       <div className='flex justify-between items-center'>
