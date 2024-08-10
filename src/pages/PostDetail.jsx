@@ -21,6 +21,12 @@ import { postsService } from '../services/post.service'
 import Breadcrumbs from '../components/Breadcrumbs'
 import { Header } from '../components'
 import OwnerDetail from '../components/OwnerProfile'
+import { gridPostStatus } from '../components/GridTable/post'
+import DropDown from '../components/DropDown'
+import { useDispatch } from 'react-redux'
+import { setLoading } from '../store/reducers/app-slice'
+import { showToastError } from '../helpers'
+import { getLocalStorageAcceToken } from '../utils'
 
 export const DetailTag = ({
   heading,
@@ -60,11 +66,14 @@ export const DetailTag = ({
 
 const PostDetail = (props) => {
   const { car_slug } = useParams()
+  const dispatch = useDispatch()
   const [activeThumb, setActiveThumb] = useState(null)
   const [post, setPost] = useState(null)
   const [customer, setCustomer] = useState(null)
   const [parentData, setParentData] = useState(null)
   const [isShowBreadcrumbs, setIsShowBreadcrumbs] = useState(false)
+  const [listDatePublished, setListDatePublished] = useState([7, 15, 20, 30])
+  const [dayPublished, setDayPublished] = useState(listDatePublished[0])
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
@@ -72,7 +81,6 @@ const PostDetail = (props) => {
     setPost(response.data.data.car)
     setCustomer(response.data.data.customer)
     setIsShowBreadcrumbs(true)
-    console.log(response.data.data.car)
   }
 
   useEffect(() => {
@@ -82,7 +90,28 @@ const PostDetail = (props) => {
       setPost(props.car)
       setCustomer(props.customer)
     }
+    setListDatePublished([7, 15, 20, 30])
   }, [car_slug, props])
+
+  const publishPost = async (post_id) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await postsService.publishPost({
+        post_id: post_id,
+        data: { days_publish: dayPublished },
+        access_token: getLocalStorageAcceToken(),
+      })
+
+      if (response.status === 201 && response.data.data.momoPaymentUrl) {
+        const momoPaymentUrl = response.data.data.momoPaymentUrl
+        window.location.href = momoPaymentUrl
+      }
+    } catch (error) {
+      showToastError({ message: 'Publish post failed!' })
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
 
   return (
     post && (
@@ -99,7 +128,34 @@ const PostDetail = (props) => {
             <div>
               {isShowBreadcrumbs && (
                 <div className='flex justify-between items-center'>
-                  <Header category='Page' title='Post Detail' />
+                  <div className='flex items-center justify-between gap-3'>
+                    <Header category='Page' title='Post Detail' />
+                    <div className='mb-5'>{gridPostStatus(parentData)}</div>
+                  </div>
+                  <div className='flex items-end justify-between gap-3 w-1/3'>
+                    {parentData.post_status === 'Draft' && (
+                      <>
+                        <div className='w-[60%]'>
+                          <DropDown
+                            label='Days published'
+                            options={listDatePublished}
+                            onSelect={(date) => {
+                              setDayPublished(date)
+                            }}
+                            className='z-[44]'
+                          />
+                        </div>
+                        <button
+                          className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base px-3 py-[18px] hover:bg-opacity-80 w-[40%]'
+                          onClick={() => {
+                            publishPost(parentData.id)
+                          }}
+                        >
+                          Publish Now
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
               <div className='w-fit bg-[#f97316] rounded-tr-lg rounded-tl-lg gap-[-16px] bg-opacity-80 px-8 py-2 text-white font-medium'>
@@ -284,7 +340,7 @@ const PostDetail = (props) => {
                 </div>
               </div>
             </div>
-            <OwnerDetail customer={customer} />
+            {!props.hideOwner && <OwnerDetail customer={customer} />}
           </div>
         </div>
       </>

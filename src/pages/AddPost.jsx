@@ -6,7 +6,7 @@ import DropDown from '../components/DropDown'
 import useGetData from '../hooks/use-get-data'
 import { carService } from '../services/car.service'
 import { useTransition, animated } from '@react-spring/web'
-import { showToastError, yearRange } from '../helpers'
+import { showToastError, showToastSuccess, yearRange } from '../helpers'
 import {
   HtmlEditor,
   Image,
@@ -229,7 +229,7 @@ const AddPost = () => {
     setDayPublished([7, 15, 20, 30])
   }
 
-  const handlePost = async () => {
+  const handlePost = async (publish) => {
     if (formData.selling_price > 99999) {
       showToastError({ message: 'Your selling price must be lower than 99999' })
       return
@@ -254,18 +254,31 @@ const AddPost = () => {
       }
     }
 
+    const instance = rteObj
+    instance.updateValue()
+    const text = formatContent(instance.value)
+    newFormData.append('description', text)
+
     dispatch(setLoading(true))
     try {
-      const response = await postsService.createPost({ data: newFormData })
+      if (publish === 1) {
+        const response = await postsService.createPost({ data: newFormData })
 
-      if (response.status === 201) {
-        const newPost = response.data.data.newCarPost
-        newPost.car.car_galleries = response.data.data.carGalleries
-        dispatch(addPost(newPost))
-        navigate('/posts/' + newPost.car.car_slug)
+        if (response.status === 201 && response.data.data.momoPaymentUrl) {
+          const momoPaymentUrl = response.data.data.momoPaymentUrl
+          window.location.href = momoPaymentUrl
+          return
+        }
+      } else if (publish === 0) {
+        const response = await postsService.createDraftPost({ data: newFormData })
+        if (response.status === 201) {
+          const newPost = response.data.data.newCarPost
+          newPost.car.car_galleries = response.data.data.carGalleries
+          dispatch(addPost([...posts, newPost]))
+          showToastSuccess({ message: 'Saved draft post success!' })
+          navigate('/cars/' + newPost.car.car_slug)
+        }
       }
-
-      console.log(response)
     } catch (error) {
       showToastError({ message: 'Failed to add post' })
       console.error(error)
@@ -287,13 +300,12 @@ const AddPost = () => {
     })
   }
 
-  function saveDescription() {
-    const instance = rteObj
-    instance.updateValue()
-    const text = formatContent(instance.value)
-    console.log(text)
-    setFormData((pre) => ({ ...pre, description: text }))
-  }
+  // function saveDescription() {
+  //   const instance = rteObj
+  //   instance.updateValue()
+  //   const text = formatContent(instance.value)
+  //   setFormData((pre) => ({ ...pre, description: text }))
+  // }
 
   return (
     brands.car_brands && (
@@ -440,7 +452,7 @@ const AddPost = () => {
                             label='Days published'
                             options={dayPublished}
                             onSelect={(date) => {
-                              setFormData((pre) => ({ ...pre, date_published: date }))
+                              setFormData((pre) => ({ ...pre, days_publish: date }))
                               setCostDays(Number(date) * 2000)
                             }}
                             className='z-[44]'
@@ -499,19 +511,20 @@ const AddPost = () => {
                                 rteObj = richtexteditor
                               }}
                               created={created.bind(this)}
+                              placeholder='Your description here'
                             >
-                              <p>Your description here</p>
+                              <></>
 
                               <Inject services={[HtmlEditor, Toolbar, Image, Link, QuickToolbar]} />
                             </RichTextEditorComponent>
-                            <button
+                            {/* <button
                               className='rounded-[16px] z-50 bg-[#f97316] text-[#F5F7FF] absolute bottom-2 left-2  px-4 py-3 w-fit  hover:bg-opacity-80'
                               onClick={() => {
                                 saveDescription()
                               }}
                             >
                               Save
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
@@ -526,14 +539,26 @@ const AddPost = () => {
                           </button>
                           <div className='hidden md:block'></div>
                           <div className='hidden md:block'></div>
-                          <button
-                            className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
-                            onClick={() => {
-                              handlePost()
-                            }}
-                          >
-                            Post
-                          </button>
+                          <div className='flex justify-between items-center gap-2'>
+                            <button
+                              className='rounded-full bg-[#DBDBDB] text-[#646464]  p-3 w-full  hover:bg-opacity-80'
+                              onClick={() => {
+                                // saveDescription()
+                                handlePost(0)
+                              }}
+                            >
+                              Save Draft
+                            </button>
+                            <button
+                              className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
+                              onClick={() => {
+                                // saveDescription()
+                                handlePost(1)
+                              }}
+                            >
+                              Publish Now
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </animated.div>

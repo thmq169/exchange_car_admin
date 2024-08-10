@@ -37,10 +37,10 @@ const App = () => {
           path: '/wishlist/:car_slug',
           element: <PostDetail />,
         },
-        // {
-        //   path: '/posts/add-post',
-        //   element: <AddPost />,
-        // },
+        {
+          path: '/cars/:car_slug',
+          element: <PostDetail hideOwner />,
+        },
         {
           path: '/cars/add-car',
           element: <AddPost />,
@@ -54,10 +54,6 @@ const App = () => {
           path: '/wishlist',
           element: <WishList />,
         },
-        // {
-        //   path: '/customers',
-        //   element: <Customers />,
-        // },
         {
           path: '/brands',
           element: <Line />,
@@ -82,14 +78,6 @@ const App = () => {
           path: '/calendars',
           element: <Calendar />,
         },
-        // {
-        //   path: '/pyramid',
-        //   element: <Pyramid />,
-        // },
-        // {
-        //   path: '/stacked',
-        //   element: <Stacked />,
-        // },
       ],
     },
     {

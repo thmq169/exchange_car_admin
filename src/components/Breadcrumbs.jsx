@@ -1,15 +1,20 @@
-// Breadcrumbs.jsx
-
 import { Link, useLocation } from 'react-router-dom'
+import { useAppSelector } from '../hooks/hook'
+import { selectUser } from '../store/reducers/auth-slice'
 
 const Breadcrumbs = () => {
   const location = useLocation()
+
+  const user = useAppSelector(selectUser)
+
   const pathnames = location.pathname.split('/').filter((x) => x)
   let breadcrumbPath = ''
 
+  console.log(user)
+
   return (
     <div className=' text-[#f97316] font-semibold text-lg'>
-      <Link to='/analytics' className='hover:underline'>
+      <Link to={user.user_roles.includes('Admin') ? '/analytics' : '/cars'} className='hover:underline'>
         Home{' '}
       </Link>
       {pathnames.map((name, index) => {

@@ -20,14 +20,15 @@ import { contextMenuItems } from '../data/dummy'
 import { Header } from '../components'
 import { postGrid } from '../components/GridTable/post'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
-import { selectPostsUser } from '../store/reducers/post-slice'
+import { selectPostsUser, setPostsUser } from '../store/reducers/post-slice'
 import PostDetail from './PostDetail'
-import { getPostsUser } from '../store/actions/post.action'
 import { useNavigate } from 'react-router-dom'
 import { FaRegPlusSquare } from 'react-icons/fa'
-import { getUserProfile } from '../store/actions/auth.action'
 import { getLocalStorageAcceToken } from '../utils'
-import { selectUser } from '../store/reducers/auth-slice'
+import { selectUser, setUser } from '../store/reducers/auth-slice'
+import { showToastError } from '../helpers'
+import { authService } from '../services/auth.service'
+import { postsService } from '../services/post.service'
 
 const Car = () => {
   const navigate = useNavigate()
@@ -37,25 +38,29 @@ const Car = () => {
   const user = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
 
-  const fetchUser = async () => {
-    await dispatch(getUserProfile({ access_token: getLocalStorageAcceToken() }))
-  }
-  const getListPostsUser = async () => {
-    await dispatch(getPostsUser({ customer_id: user.id }))
+  const getListPostsUser = async (userId) => {
+    try {
+      // await dispatch(getPostsUser({ customer_id: user.id }))
+      const response = await postsService.getPostsUser({ customer_id: userId })
+      dispatch(setPostsUser(response.data.data.car_posts))
+    } catch (error) {
+      showToastError({ message: error.message })
+    }
   }
 
-  console.log(postsUser)
+  const fetchUser = async () => {
+    try {
+      const response = await authService.getProfile(getLocalStorageAcceToken())
+      dispatch(setUser(response.data.data.currentUser))
+      getListPostsUser(response.data.data.currentUser.id)
+    } catch (error) {
+      showToastError({ message: error.message })
+    }
+  }
 
   useEffect(() => {
-    if (user == null) {
-      fetchUser()
-      return
-    }
-
-    if (postsUser === null) {
-      getListPostsUser()
-    }
-  }, [user, postsUser, fetchUser])
+    fetchUser()
+  }, [])
 
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
@@ -73,7 +78,7 @@ const Car = () => {
       </div>
       {postsUser && (
         <GridComponent
-          dataSource={postsUser}
+          dataSource={[...postsUser].reverse()}
           allowPaging
           allowSorting
           allowExcelExport

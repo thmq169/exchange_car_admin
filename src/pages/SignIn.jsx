@@ -5,7 +5,6 @@ import { useAppDispatch } from '../hooks/hook'
 import { useState } from 'react'
 import { authService } from '../services/auth.service'
 import { setUser, setUserToken } from '../store/reducers/auth-slice'
-import { getPostsUser } from '../store/actions/post.action'
 import { setLoading } from '../store/reducers/app-slice'
 
 const schema = yup.object({
@@ -49,7 +48,7 @@ export default function SignIn() {
         localStorage.setItem('access_token', access_token)
         dispatch(setUserToken(access_token))
         dispatch(setUser(userProfile.data.data.currentUser))
-        await dispatch(getPostsUser({ customer_id: userProfile.data.data.currentUser.id }))
+        // await dispatch(getPostsUser({ customer_id: userProfile.data.data.currentUser.id }))
       }
     } catch (error) {
       console.log(error)

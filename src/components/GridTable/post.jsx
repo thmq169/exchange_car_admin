@@ -15,12 +15,15 @@ const gridPostImage = (props) => (
   </div>
 )
 
-const gridPostStatus = (props) => {
+export const gridPostStatus = (props) => {
   const statusColorMap = {
     Posted: '#8BE78B',
     Pending: '#FEC90F',
     Cancel: 'red',
     'Wait to pay': '#FEC90F',
+    Draft: '#DBDBDB',
+    Active: '#8BE78B',
+    Expired: 'red',
   }
 
   return (
@@ -47,10 +50,10 @@ const gridPostDateCreated = (props) => (
 const GridPostAction = (props) => {
   return (
     <Link
-      to={`/posts/${props.car.car_slug}`}
+      to={`/${window.location.pathname.split('/').pop()}/${props.car.car_slug}`}
       className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
     >
-      Update
+      Detail
     </Link>
   )
 }
@@ -133,12 +136,12 @@ export const postGrid = [
     textAlign: 'Center',
     width: '100',
   },
-  // {
-  //   headerText: 'Action',
-  //   template: GridPostAction,
-  //   textAlign: 'Center',
-  //   width: '100',
-  // },
+  {
+    headerText: 'Action',
+    template: GridPostAction,
+    textAlign: 'Center',
+    width: '100',
+  },
 ]
 
 export const wishListGrid = [

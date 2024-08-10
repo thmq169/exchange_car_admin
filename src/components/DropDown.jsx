@@ -11,7 +11,6 @@ const DropDown = ({ label, options, onSelect, className }) => {
   }
 
   const handleOptionClick = (optionValue) => {
-    console.log(optionValue)
     setSelectedOption(optionValue)
     setIsOpen(false)
     onSelect(optionValue)

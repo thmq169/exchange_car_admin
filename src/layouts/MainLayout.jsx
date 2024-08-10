@@ -7,6 +7,7 @@ import { selectUser, selectUserToken, setUser, setUserToken } from '../store/red
 import { authService } from '../services/auth.service'
 import { selectLoading } from '../store/reducers/app-slice'
 import Loading from '../components/Loading'
+import { showToastError, showToastSuccess } from '../helpers'
 
 const MainLayout = () => {
   const { setCurrentColor, setCurrentMode, activeMenu, themeSettings } = useStateContext()
@@ -26,9 +27,20 @@ const MainLayout = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
 
+    const extraData = JSON.parse(params.get('extraData'))
+    const resultCode = JSON.parse(params.get('resultCode'))
+
+    if (extraData !== null && extraData !== 'null' && resultCode === 0) {
+      sessionStorage.setItem('paymentStatus', 0)
+      showToastSuccess({ message: 'Payment success!' })
+      navigate('/cars/' + extraData.car_slug)
+      return
+    } else if (extraData !== null && resultCode !== 0) {
+      showToastError({ message: 'Payment failed!' })
+    }
+
     const accessToken = params.get('token')
     const origin = params.get('origin')
-
     if (accessToken !== 'null' && accessToken !== null) {
       dispatch(setUserToken(accessToken))
       fetchUser(accessToken)
@@ -41,9 +53,10 @@ const MainLayout = () => {
 
   useEffect(() => {
     if (userToken !== null && user !== null) {
-      if (user.user_roles.includes('Admin')) {
+      const paymentStatus = sessionStorage.getItem('paymentStatus')
+      if (user.user_roles.includes('Admin') && paymentStatus === null) {
         navigate('/analytics')
-      } else if (user.user_roles.includes('Individual Customer')) {
+      } else if (user.user_roles.includes('Individual Customer') && paymentStatus === null) {
         navigate('/cars')
       }
     }

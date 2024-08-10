@@ -26,7 +26,7 @@ export const postSlice = createSlice({
       state.queryTable = action.payload
     },
     addPost: (state, action) => {
-      state.posts = [...state.posts, action.payload]
+      state.posts = action.payload
     },
     setPostsUser: (state, action) => {
       state.postsUser = action.payload
