@@ -13,33 +13,35 @@ const Breadcrumbs = () => {
   console.log(user)
 
   return (
-    <div className=' text-[#f97316] font-semibold text-lg'>
-      <Link to={user.user_roles.includes('Admin') ? '/analytics' : '/cars'} className='hover:underline'>
-        Home{' '}
-      </Link>
-      {pathnames.map((name, index) => {
-        breadcrumbPath += `/${name}`
-        const isLast = index === pathnames.length - 1
+    user && (
+      <div className=' text-[#f97316] font-semibold text-lg'>
+        <Link to={user.user_roles.includes('Admin') ? '/analytics' : '/cars'} className='hover:underline'>
+          Home{' '}
+        </Link>
+        {pathnames.map((name, index) => {
+          breadcrumbPath += `/${name}`
+          const isLast = index === pathnames.length - 1
 
-        name = name.replace('_', ' ')
-        name = name.replace('-', ' ')
+          name = name.replace('_', ' ')
+          name = name.replace('-', ' ')
 
-        return isLast ? (
-          <span key={breadcrumbPath} className='capitalize '>
-            {' '}
-            / {name}
-          </span>
-        ) : (
-          <span key={breadcrumbPath}>
-            {' '}
-            /{' '}
-            <Link to={breadcrumbPath} className='capitalize hover:underline'>
-              {name}
-            </Link>
-          </span>
-        )
-      })}
-    </div>
+          return isLast ? (
+            <span key={breadcrumbPath} className='capitalize '>
+              {' '}
+              / {name}
+            </span>
+          ) : (
+            <span key={breadcrumbPath}>
+              {' '}
+              /{' '}
+              <Link to={breadcrumbPath} className='capitalize hover:underline'>
+                {name}
+              </Link>
+            </span>
+          )
+        })}
+      </div>
+    )
   )
 }
 
