@@ -7,7 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/zoom'
 import 'swiper/css/thumbs'
-import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar } from 'react-icons/fa'
+import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar, FaTrashAlt } from 'react-icons/fa'
 import { SiBrandfolder, SiCoronaengine } from 'react-icons/si'
 import { MdLocationCity, MdModelTraining, MdOutlineAirlineSeatReclineNormal, MdOutlineUploadFile } from 'react-icons/md'
 import { BsCalendar2Date, BsCreditCard2Front, BsFillPinMapFill, BsSpeedometer2 } from 'react-icons/bs'
@@ -16,7 +16,7 @@ import { RiCheckboxMultipleBlankLine, RiEarthFill, RiOilFill } from 'react-icons
 import { AiOutlineBgColors, AiOutlineNumber } from 'react-icons/ai'
 import { GiCarDoor, GiCarWheel } from 'react-icons/gi'
 import moment from 'moment'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { postsService } from '../services/post.service'
 import Breadcrumbs from '../components/Breadcrumbs'
 import { Header } from '../components'
@@ -27,6 +27,11 @@ import { useDispatch } from 'react-redux'
 import { setLoading } from '../store/reducers/app-slice'
 import { showToastError } from '../helpers'
 import { getLocalStorageAcceToken } from '../utils'
+import { useAppSelector } from '../hooks/hook'
+import { selectUser } from '../store/reducers/auth-slice'
+import { TooltipComponent } from '@syncfusion/ej2-react-popups'
+import { selectPostsUser } from '../store/reducers/post-slice'
+import ModalConfirmDelete from '../components/ModalConfirmDelete'
 
 export const DetailTag = ({
   heading,
@@ -74,6 +79,10 @@ const PostDetail = (props) => {
   const [isShowBreadcrumbs, setIsShowBreadcrumbs] = useState(false)
   const [listDatePublished, setListDatePublished] = useState([7, 15, 20, 30])
   const [dayPublished, setDayPublished] = useState(listDatePublished[0])
+  const user = useAppSelector(selectUser)
+  const postsUser = useAppSelector(selectPostsUser)
+  const navigate = useNavigate()
+  const [showModalDelete, setShowModalDelete] = useState(false)
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
@@ -91,6 +100,7 @@ const PostDetail = (props) => {
       setCustomer(props.customer)
     }
     setListDatePublished([7, 15, 20, 30])
+    console.log(user)
   }, [car_slug, props])
 
   const publishPost = async (post_id) => {
@@ -112,6 +122,24 @@ const PostDetail = (props) => {
       dispatch(setLoading(false))
     }
   }
+
+  // const handleDelete = async (post_id) => {
+  //   dispatch(setLoading(true))
+  //   try {
+  //     const res = await postsService.deletePost({ post_id: post_id, access_token: getLocalStorageAcceToken() })
+
+  //     if (res.status === 200) {
+  //       const newListPostUser = postsUser.filter((post) => post.id !== post_id)
+  //       dispatch(setPostsUser(newListPostUser))
+  //       showToastSuccess({ message: res.data.data.message })
+  //       navigate('/cars')
+  //     }
+  //   } catch (error) {
+  //     showToastError({ message: error.message })
+  //   } finally {
+  //     dispatch(setLoading(false))
+  //   }
+  // }
 
   return (
     post && (
@@ -339,6 +367,32 @@ const PostDetail = (props) => {
                   </div>
                 </div>
               </div>
+              {user && user.user_roles.includes('Individual Customer') && (
+                <div className='w-full mt-4'>
+                  <div className='ml-auto flex gap-3 w-fit'>
+                    <button className='rounded-lg w-fit px-4 py-2 text-[#EDF5FF] flex-1 text-lg bg-[#f97316]'>
+                      Update
+                    </button>
+                    <TooltipComponent
+                      content={`Delete ${post.car_name}`}
+                      position='TopCenter'
+                      tabIndex={0}
+                      onClick={() => setShowModalDelete(true)}
+                    >
+                      <button className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'>
+                        <FaTrashAlt className='w-full h-full' />
+                      </button>
+                    </TooltipComponent>
+                  </div>
+                  {showModalDelete && (
+                    <ModalConfirmDelete
+                      setShow={setShowModalDelete}
+                      data={parentData}
+                      handleClick={() => navigate('/cars')}
+                    />
+                  )}
+                </div>
+              )}
             </div>
             {!props.hideOwner && <OwnerDetail customer={customer} />}
           </div>

@@ -10,8 +10,6 @@ const Breadcrumbs = () => {
   const pathnames = location.pathname.split('/').filter((x) => x)
   let breadcrumbPath = ''
 
-  console.log(user)
-
   return (
     user && (
       <div className=' text-[#f97316] font-semibold text-lg'>

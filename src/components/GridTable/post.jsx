@@ -8,6 +8,8 @@ import { customerService } from '../../services/customer.service'
 import { getLocalStorageAcceToken } from '../../utils'
 import { useDispatch } from 'react-redux'
 import { setWishList } from '../../store/reducers/customer-slice'
+import ModalConfirmDelete from '../ModalConfirmDelete'
+import { useState } from 'react'
 
 const gridPostImage = (props) => (
   <div>
@@ -48,13 +50,27 @@ const gridPostDateCreated = (props) => (
 )
 
 const GridPostAction = (props) => {
+  const [showModalDelete, setShowModalDelete] = useState(false)
   return (
-    <Link
-      to={`/${window.location.pathname.split('/').pop()}/${props.car.car_slug}`}
-      className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
-    >
-      Detail
-    </Link>
+    <div className='flex gap-1 justify-between'>
+      <Link
+        to={`/${window.location.pathname.split('/').pop()}/${props.car.car_slug}`}
+        className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
+      >
+        Detail
+      </Link>
+      <TooltipComponent
+        content={`Delete ${props.car.car_name}`}
+        position='TopCenter'
+        tabIndex={0}
+        onClick={() => setShowModalDelete(true)}
+      >
+        <button className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'>
+          <FaTrashAlt className='w-full h-full' />
+        </button>
+      </TooltipComponent>
+      {showModalDelete && <ModalConfirmDelete setShow={setShowModalDelete} data={props} />}
+    </div>
   )
 }
 

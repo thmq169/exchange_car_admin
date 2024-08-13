@@ -11,6 +11,7 @@ export const GET_POST = `${APP}/${POST_SERVICE}`
 export const GET_LATEST_POST = `${APP}/${POST_SERVICE}/latest`
 export const QUERY_TABLE = `${APP}/${POST_SERVICE}/query-table`
 export const CREATE_POST = `${APP}/${POST_SERVICE}`
+export const DELETE_POST = `${APP}/${POST_SERVICE}`
 export const CREATE_PUBLISH_POST = `${APP}/${POST_SERVICE}/publish`
 export const CREATE_DRAFT_POST = `${APP}/${POST_SERVICE}/draft`
 export const GET_POSTS_USER = `${APP}/${POST_SERVICE}/customer`

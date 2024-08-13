@@ -34,6 +34,7 @@ const Car = () => {
   const navigate = useNavigate()
   const editing = { allowDeleting: true, allowEditing: true }
   const toolbarOptions = ['Search']
+  const filterSettings = { type: 'Excel' }
   const postsUser = useAppSelector(selectPostsUser)
   const user = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
@@ -87,6 +88,8 @@ const Car = () => {
           editSettings={editing}
           toolbar={toolbarOptions}
           detailTemplate={PostDetail.bind(this)}
+          allowFiltering={true}
+          filterSettings={filterSettings}
         >
           <ColumnsDirective>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}

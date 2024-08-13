@@ -2,6 +2,7 @@ import axiosClient from './axios-client'
 import {
   CREATE_DRAFT_POST,
   CREATE_PUBLISH_POST,
+  DELETE_POST,
   GET_LATEST_POST,
   GET_POST,
   GET_POSTS,
@@ -47,5 +48,12 @@ export const postsService = {
   },
   getPostsUser: ({ customer_id }) => {
     return axiosClient.get(GET_POSTS_USER + `/${customer_id}/all`)
+  },
+  deletePost: ({ post_id, access_token }) => {
+    return axiosClient.delete(DELETE_POST + `/${post_id}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
   },
 }
