@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const DropDown = ({ label, options, onSelect, className }) => {
+const DropDown = ({ label, options, value, onSelect, className }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState()
 
@@ -21,6 +21,21 @@ const DropDown = ({ label, options, onSelect, className }) => {
       setSelectedOption('')
       return
     }
+
+    if (value !== undefined && options.length > 0) {
+      const defaultValue = options.find((option) => option === value)
+      console.log(defaultValue)
+      if (defaultValue) {
+        setSelectedOption(defaultValue)
+        onSelect(defaultValue)
+      } else {
+        setSelectedOption(options[0])
+        onSelect(options[0])
+      }
+
+      return
+    }
+
     setSelectedOption(options[0])
     onSelect(options[0])
   }, [options])
@@ -52,7 +67,7 @@ const DropDown = ({ label, options, onSelect, className }) => {
               .map((option, index) => (
                 <span
                   key={'option-' + index}
-                  className='option flex w-full items-center justify-between capitalize transition-all '
+                  className='option text-left w-full items-center justify-between capitalize transition-all '
                   onClick={() => handleOptionClick(option)}
                 >
                   {option}

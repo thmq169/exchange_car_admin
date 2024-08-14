@@ -3,7 +3,7 @@ import { FaFileUpload } from 'react-icons/fa'
 import Button from './Button'
 import { MdOutlineCancel } from 'react-icons/md'
 
-const UploadImage = ({ selectedImages, onSelectFile, deleteHandler }) => {
+const UploadImage = ({ id, selectedImages, onSelectFile, deleteHandler }) => {
   return (
     <div className='grid grid-cols-1 md:grid-cols-4 gap-4 '>
       <label className='col-span-1 w-full flex flex-col gap-8 justify-center items-center bg-[#f97316] bg-opacity-10 border-2 border-dashed border-[#f97316] rounded-[20px] h-52 cursor-pointer text-lg'>
@@ -24,7 +24,7 @@ const UploadImage = ({ selectedImages, onSelectFile, deleteHandler }) => {
           type='file'
           className='hidden'
           multiple
-          id='fileInput'
+          id={id ?? 'fileInput'}
           onChange={onSelectFile}
           accept='image/png , image/jpeg, image/webp'
         />

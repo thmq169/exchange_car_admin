@@ -152,3 +152,26 @@ export const calculateCostForPublisDay = (dayNumber) => {
       return 60000
   }
 }
+
+export const findObjectDifference = (obj1, obj2) => {
+  const differents = Object.keys({ ...obj1, ...obj2 }).reduce((diff, key) => {
+    if (obj1[key] != obj2[key] && obj1[key] !== null && obj1[key] !== undefined && obj1[key] !== 'null') {
+      diff[key] = { obj1: obj1[key], obj2: obj2[key] }
+    }
+    return diff
+  }, {})
+
+  const obj1Values = {}
+
+  for (const key in differents) {
+    if (differents.hasOwnProperty(key)) {
+      obj1Values[key] = differents[key].obj1
+    }
+  }
+
+  return obj1Values
+}
+
+export const isObjectEmpty = (objectName) => {
+  return objectName && Object.keys(objectName).length === 0 && objectName.constructor === Object
+}

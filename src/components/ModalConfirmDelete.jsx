@@ -52,7 +52,7 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
         }}
         initial='hidden'
         whileInView='visible'
-        className='max-w-auto min-h-[316px] h-auto rounded-3xl gap-5 flex flex-col items-center justify-between p-10 bg-[#FFFFFF] m-auto z-20 '
+        className='max-w-auto min-h-[316px] h-auto border-l-[6px] shadow-lg border-[#f97316] rounded-3xl gap-5 flex flex-col items-center justify-between p-10 bg-[#FFFFFF] m-auto z-20 '
       >
         <div className=' font-semibold text-lg text-right cursor-pointer w-full'>
           <button className='p-2 rounded-xl text-[#3B3B3B] font-bold' onClick={() => handleOffModal()}>

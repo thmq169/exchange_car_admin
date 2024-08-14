@@ -8,6 +8,7 @@ import {
   GET_POSTS,
   GET_POSTS_USER,
   QUERY_TABLE,
+  UPDATE_POST,
 } from './endpoint'
 
 export const postsService = {
@@ -52,6 +53,14 @@ export const postsService = {
   deletePost: ({ post_id, access_token }) => {
     return axiosClient.delete(DELETE_POST + `/${post_id}`, {
       headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+  },
+  updatePost: ({ post_id, data, access_token }) => {
+    return axiosClient.patch(UPDATE_POST + `/${post_id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${access_token}`,
       },
     })

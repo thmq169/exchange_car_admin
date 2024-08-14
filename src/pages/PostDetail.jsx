@@ -30,8 +30,8 @@ import { getLocalStorageAcceToken } from '../utils'
 import { useAppSelector } from '../hooks/hook'
 import { selectUser } from '../store/reducers/auth-slice'
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'
-import { selectPostsUser } from '../store/reducers/post-slice'
 import ModalConfirmDelete from '../components/ModalConfirmDelete'
+import ModalUpdatePost from '../components/ModalUpdatePost'
 
 export const DetailTag = ({
   heading,
@@ -80,9 +80,9 @@ const PostDetail = (props) => {
   const [listDatePublished, setListDatePublished] = useState([7, 15, 20, 30])
   const [dayPublished, setDayPublished] = useState(listDatePublished[0])
   const user = useAppSelector(selectUser)
-  const postsUser = useAppSelector(selectPostsUser)
   const navigate = useNavigate()
   const [showModalDelete, setShowModalDelete] = useState(false)
+  const [showModalUpdate, setShowModalUpdate] = useState(false)
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
@@ -100,7 +100,6 @@ const PostDetail = (props) => {
       setCustomer(props.customer)
     }
     setListDatePublished([7, 15, 20, 30])
-    console.log(user)
   }, [car_slug, props])
 
   const publishPost = async (post_id) => {
@@ -122,24 +121,6 @@ const PostDetail = (props) => {
       dispatch(setLoading(false))
     }
   }
-
-  // const handleDelete = async (post_id) => {
-  //   dispatch(setLoading(true))
-  //   try {
-  //     const res = await postsService.deletePost({ post_id: post_id, access_token: getLocalStorageAcceToken() })
-
-  //     if (res.status === 200) {
-  //       const newListPostUser = postsUser.filter((post) => post.id !== post_id)
-  //       dispatch(setPostsUser(newListPostUser))
-  //       showToastSuccess({ message: res.data.data.message })
-  //       navigate('/cars')
-  //     }
-  //   } catch (error) {
-  //     showToastError({ message: error.message })
-  //   } finally {
-  //     dispatch(setLoading(false))
-  //   }
-  // }
 
   return (
     post && (
@@ -370,9 +351,16 @@ const PostDetail = (props) => {
               {user && user.user_roles.includes('Individual Customer') && (
                 <div className='w-full mt-4'>
                   <div className='ml-auto flex gap-3 w-fit'>
-                    <button className='rounded-lg w-fit px-4 py-2 text-[#EDF5FF] flex-1 text-lg bg-[#f97316]'>
+                    <button
+                      onClick={() => setShowModalUpdate(true)}
+                      className='rounded-lg w-fit px-4 py-2 text-[#EDF5FF] flex-1 text-lg bg-[#f97316]'
+                    >
                       Update
                     </button>
+                    {showModalUpdate && (
+                      <ModalUpdatePost data={parentData} setShow={setShowModalUpdate} setPost={setPost} />
+                    )}
+
                     <TooltipComponent
                       content={`Delete ${post.car_name}`}
                       position='TopCenter'

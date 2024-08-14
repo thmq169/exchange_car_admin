@@ -68,7 +68,8 @@ export const Input = ({ label, name, value, placeholder, type, min, max, handleC
           min={min && Number(min)}
           max={max && Number(max)}
           maxLength={max}
-          onBlur={(e) => handleChange(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
+          // onBlur={(e) => handleChange(e.target.value)}
           className='py-2 px-4 border-[#f97316] ring-[#f97316] ring-1 block peer rounded-[5px] w-full mt-3 focus:outline-none'
         />
       </div>
@@ -76,7 +77,7 @@ export const Input = ({ label, name, value, placeholder, type, min, max, handleC
   )
 }
 
-const AddPost = () => {
+const AddPost = ({ showBreadCurmb = true }) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const posts = useAppSelector(selectPosts)
@@ -310,9 +311,11 @@ const AddPost = () => {
   return (
     brands.car_brands && (
       <>
-        <div className='m-2 md:mx-10 mt-24 md:mt-10 p-2 '>
-          <Breadcrumbs />
-        </div>
+        {showBreadCurmb && (
+          <div className='m-2 md:mx-10 mt-24 md:mt-10 p-2 '>
+            <Breadcrumbs />
+          </div>
+        )}
         <div className='m-2 mt-10 md:mt-4 md:mx-10 p-2 md:p-10 bg-white rounded-3xl'>
           <div className='flex justify-between items-center'>
             <Header category='Page' title='Add Car Post' />
@@ -517,14 +520,6 @@ const AddPost = () => {
 
                               <Inject services={[HtmlEditor, Toolbar, Image, Link, QuickToolbar]} />
                             </RichTextEditorComponent>
-                            {/* <button
-                              className='rounded-[16px] z-50 bg-[#f97316] text-[#F5F7FF] absolute bottom-2 left-2  px-4 py-3 w-fit  hover:bg-opacity-80'
-                              onClick={() => {
-                                saveDescription()
-                              }}
-                            >
-                              Save
-                            </button> */}
                           </div>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
@@ -543,7 +538,6 @@ const AddPost = () => {
                             <button
                               className='rounded-full bg-[#DBDBDB] text-[#646464]  p-3 w-full  hover:bg-opacity-80'
                               onClick={() => {
-                                // saveDescription()
                                 handlePost(0)
                               }}
                             >
@@ -552,7 +546,6 @@ const AddPost = () => {
                             <button
                               className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
                               onClick={() => {
-                                // saveDescription()
                                 handlePost(1)
                               }}
                             >
