@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -11,6 +11,7 @@ import {
   Inject,
   Resize,
   DragAndDrop,
+  ExcelExport,
 } from '@syncfusion/ej2-react-schedule'
 
 import { Header } from '../components'
@@ -20,6 +21,8 @@ const PropertyPane = (props) => <div className='mt-5'>{props.children}</div>
 
 const Scheduler = () => {
   const [scheduleObj, setScheduleObj] = useState()
+
+  const [schedule, setSchedule] = useState([])
 
   const change = (args) => {
     scheduleObj.selectedDate = args.value
@@ -31,22 +34,58 @@ const Scheduler = () => {
     arg.navigation.enable = true
   }
 
+  const onActionComplete = (e) => {
+    if (e.data !== undefined) {
+      console.log(e)
+
+      const scheduleData = JSON.parse(localStorage.getItem('scheduleData'))
+      if (scheduleData !== null && scheduleData.length > 0) {
+        if (e.requestType === 'eventCreated') {
+          let eventExists = false
+          const updatedScheduleData = scheduleData.map((event) => {
+            if (event.Id === e.data[0].Id) {
+              eventExists = true
+              return e.data[0]
+            }
+            return event
+          })
+
+          if (!eventExists) {
+            updatedScheduleData.push(e.data[0])
+          }
+
+          localStorage.setItem('scheduleData', JSON.stringify(updatedScheduleData))
+        } else if (e.requestType === 'eventRemoved') {
+          const newSchedule = scheduleData.filter((event) => event.Id !== e.data[0].Id)
+          localStorage.setItem('scheduleData', JSON.stringify(newSchedule))
+        }
+      } else {
+        localStorage.setItem('scheduleData', JSON.stringify([e.data[0]]))
+      }
+    }
+  }
+
+  useEffect(() => {
+    setSchedule(JSON.parse(localStorage.getItem('scheduleData')))
+  }, [])
+
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
       <Header category='App' title='Calendar' />
       <ScheduleComponent
         height='650px'
         ref={(schedule) => setScheduleObj(schedule)}
-        selectedDate={new Date(2021, 0, 10)}
-        eventSettings={{ dataSource: scheduleData }}
+        selectedDate={new Date()}
+        eventSettings={{ dataSource: schedule }}
         dragStart={onDragStart}
+        actionComplete={(e) => onActionComplete(e)}
       >
         <ViewsDirective>
           {['Day', 'Week', 'WorkWeek', 'Month', 'Agenda'].map((item) => (
             <ViewDirective key={item} option={item} />
           ))}
         </ViewsDirective>
-        <Inject services={[Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop]} />
+        <Inject services={[Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop, ExcelExport]} />
       </ScheduleComponent>
     </div>
   )
