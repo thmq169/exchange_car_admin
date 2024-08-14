@@ -23,10 +23,16 @@ const MainLayout = () => {
     const user = res.data.data.currentUser
     dispatch(setUser(user))
     dispatch(setUserAvatar(user.avatar_url))
+    const pathname = window.location.pathname
     if (user.user_roles.includes('Admin')) {
-      navigate('/analytics')
+      if (pathname === '/') {
+        navigate('/analytics')
+      }
     } else if (user.user_roles.includes('Individual Customer')) {
-      navigate('/cars')
+      if (pathname === '/') {
+        navigate('/cars')
+      }
+      // navigate('/cars')
     }
   }
 
@@ -49,9 +55,12 @@ const MainLayout = () => {
     const origin = params.get('origin')
     if (accessToken !== 'null' && accessToken !== null) {
       dispatch(setUserToken(accessToken))
+
       fetchUser(accessToken)
       localStorage.setItem('access_token', accessToken)
       localStorage.setItem('origin', origin)
+      console.log(window.location.pathname)
+      navigate(window.location.pathname)
     } else if (accessToken === 'null') {
       navigate('/sign-in')
     }
@@ -60,10 +69,15 @@ const MainLayout = () => {
   useEffect(() => {
     if (userToken !== null && user !== null) {
       const paymentStatus = sessionStorage.getItem('paymentStatus')
+      const pathname = window.location.pathname
       if (user.user_roles.includes('Admin') && paymentStatus === null) {
-        navigate('/analytics')
+        if (pathname === '/') {
+          navigate('/analytics')
+        }
       } else if (user.user_roles.includes('Individual Customer') && paymentStatus === null) {
-        navigate('/cars')
+        if (pathname === '/') {
+          navigate('/cars')
+        }
       }
     }
   }, [userToken])

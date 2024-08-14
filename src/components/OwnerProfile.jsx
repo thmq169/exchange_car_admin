@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getLocalStorageAcceToken, getNumberFromId } from '../utils'
-import avatar1 from '../data/avatar1.png'
-import avatar2 from '../data/avatar2.png'
-import avatar3 from '../data/avatar3.png'
-import avatar4 from '../data/avatar4.png'
+import { getLocalStorageAcceToken } from '../utils'
 import Button from './Button'
 import { DetailTag } from '../pages/PostDetail'
 import { RiCharacterRecognitionLine } from 'react-icons/ri'
@@ -34,6 +30,7 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
       dispatch(setUserAvatar(response.data.data.currentUser.avatar_url))
       setOwner(response.data.data.currentUser)
       setAvatar(response.data.data.currentUser.avatar_url)
+      setDefaultAvatar(response.data.data.currentUser.avatar_url)
     }
     if (customer === null) {
       getOwnerProfile()
@@ -42,23 +39,6 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
     setDefaultAvatar(customer.avatar_url)
     setAvatar(customer.avatar_url)
   }, [])
-
-  const userAvatar = (id) => {
-    const numberAvatar = getNumberFromId(id)
-
-    switch (numberAvatar) {
-      case 1:
-        return avatar1
-      case 2:
-        return avatar2
-      case 3:
-        return avatar3
-      case 4:
-        return avatar4
-      default:
-        return avatar1
-    }
-  }
 
   const onSelectFile = (event) => {
     const selectedFile = event.target.files[0]
