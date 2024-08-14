@@ -45,7 +45,9 @@ const WishList = () => {
 
   useEffect(() => {
     const access_token = getLocalStorageAcceToken()
-    getWishListByUser(access_token)
+    const params = new URLSearchParams(window.location.search)
+    const accessToken = params.get('token')
+    getWishListByUser(access_token ?? accessToken)
   }, [])
 
   const toolbarOptions = ['Search']

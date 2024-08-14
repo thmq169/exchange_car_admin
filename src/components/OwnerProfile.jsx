@@ -24,8 +24,10 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
   const [owner, setOwner] = useState(customer)
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const accessToken = params.get('token')
     const getOwnerProfile = async () => {
-      const response = await authService.getProfile(getLocalStorageAcceToken())
+      const response = await authService.getProfile(getLocalStorageAcceToken() ?? accessToken)
       dispatch(setUser(response.data.data.currentUser))
       dispatch(setUserAvatar(response.data.data.currentUser.avatar_url))
       setOwner(response.data.data.currentUser)

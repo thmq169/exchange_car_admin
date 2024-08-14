@@ -50,13 +50,9 @@ const Car = () => {
   }
 
   const fetchUser = async () => {
-    try {
-      const response = await authService.getProfile(getLocalStorageAcceToken())
-      dispatch(setUser(response.data.data.currentUser))
-      getListPostsUser(response.data.data.currentUser.id)
-    } catch (error) {
-      showToastError({ message: error.message })
-    }
+    const response = await authService.getProfile(getLocalStorageAcceToken())
+    dispatch(setUser(response.data.data.currentUser))
+    getListPostsUser(response.data.data.currentUser.id)
   }
 
   useEffect(() => {
