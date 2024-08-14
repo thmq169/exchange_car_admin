@@ -87,7 +87,7 @@ const GridWishListAction = (props) => {
   }
 
   return (
-    <div className='flex justify-center items-center gap-2 relative'>
+    <div className='flex gap-2'>
       <Link
         to={`/wishlist/${props.car.car_slug}`}
         className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
@@ -97,7 +97,7 @@ const GridWishListAction = (props) => {
       <TooltipComponent content='Remove wishlist' position='TopCenter' tabIndex={0}>
         <button
           onClick={() => handleRemoveWishList(props.id)}
-          className='text-white hover:bg-opacity-75 bg-red-700 p-2 h-full capitalize rounded-lg text-md'
+          className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'
         >
           <FaTrashAlt className='w-full h-full' />
         </button>
