@@ -52,7 +52,7 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
         }}
         initial='hidden'
         whileInView='visible'
-        className='max-w-auto min-h-[316px] h-auto border-l-[6px] shadow-lg border-[#f97316] rounded-3xl gap-5 flex flex-col items-center justify-between p-10 bg-[#FFFFFF] m-auto z-20 '
+        className='max-w-[500px] min-h-[316px] h-auto border-l-[6px] shadow-lg border-[#f97316] rounded-3xl gap-5 flex flex-col items-center justify-between p-10 bg-[#FFFFFF] m-auto z-20 '
       >
         <div className=' font-semibold text-lg text-right cursor-pointer w-full'>
           <button className='p-2 rounded-xl text-[#3B3B3B] font-bold' onClick={() => handleOffModal()}>
@@ -61,7 +61,7 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
         </div>
         <h2 className='font-semibold text-2xl text-center capitalize text-[#3B3B3B]'>Are you sure?</h2>
 
-        <p className='text-lg'>
+        <p className='text-lg ' style={{ textWrap: 'wrap' }}>
           Do you want really want to delete <strong>{data.car.car_name}</strong>?
         </p>
 

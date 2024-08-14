@@ -6,7 +6,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups'
 
 import { useStateContext } from '../contexts/ContextProvider'
 import { useAppSelector } from '../hooks/hook'
-import { selectUser } from '../store/reducers/auth-slice'
+import { selectAvatar, selectUser } from '../store/reducers/auth-slice'
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position='BottomCenter'>
@@ -27,6 +27,7 @@ const Navbar = () => {
     useStateContext()
 
   const user = useAppSelector(selectUser)
+  const avatar = useAppSelector(selectAvatar)
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth)
@@ -74,7 +75,7 @@ const Navbar = () => {
           >
             <img
               className='rounded-full w-8 h-8'
-              src={user.avatar_url ?? '/images/profile/default_avatar.jpg'}
+              src={avatar ?? '/images/profile/default_avatar.jpg'}
               alt='user-profile'
             />
             <p>

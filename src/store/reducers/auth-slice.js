@@ -7,6 +7,7 @@ const initialState = {
   userToken: null,
   error: null,
   success: false,
+  avatar: null,
 }
 
 const authSlice = createSlice({
@@ -22,6 +23,9 @@ const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload
     },
+    setUserAvatar: (state, action) => {
+      state.avatar = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
@@ -33,9 +37,10 @@ const authSlice = createSlice({
   },
 })
 
-export const { setUser, setUserToken, setLoading } = authSlice.actions
+export const { setUser, setUserToken, setLoading, setUserAvatar } = authSlice.actions
 
 export const selectUser = (state) => state.auth.user
 export const selectUserToken = (state) => state.auth.userToken
+export const selectAvatar = (state) => state.auth.avatar
 
 export default authSlice.reducer

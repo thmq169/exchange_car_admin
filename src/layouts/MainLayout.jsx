@@ -3,7 +3,7 @@ import { useStateContext } from '../contexts/ContextProvider'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Navbar, Sidebar, ThemeSettings } from '../components'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
-import { selectUser, selectUserToken, setUser, setUserToken } from '../store/reducers/auth-slice'
+import { selectUser, selectUserToken, setUser, setUserAvatar, setUserToken } from '../store/reducers/auth-slice'
 import { authService } from '../services/auth.service'
 import { selectLoading } from '../store/reducers/app-slice'
 import Loading from '../components/Loading'
@@ -22,6 +22,12 @@ const MainLayout = () => {
     const res = await authService.getProfile(access_token)
     const user = res.data.data.currentUser
     dispatch(setUser(user))
+    dispatch(setUserAvatar(user.avatar_url))
+    if (user.user_roles.includes('Admin')) {
+      navigate('/analytics')
+    } else if (user.user_roles.includes('Individual Customer')) {
+      navigate('/cars')
+    }
   }
 
   useEffect(() => {
@@ -60,7 +66,7 @@ const MainLayout = () => {
         navigate('/cars')
       }
     }
-  }, [user, userToken, navigate])
+  }, [userToken])
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
@@ -74,7 +80,7 @@ const MainLayout = () => {
       dispatch(setUserToken(null))
       navigate('/sign-in')
     }
-  }, [navigate, dispatch, userToken])
+  }, [navigate, userToken])
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode')

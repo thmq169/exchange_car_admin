@@ -72,7 +72,6 @@ const Profile = () => {
                       {...register('current_password')}
                       type='password'
                       placeholder=''
-                      maxLength={10}
                       className={`py-2 px-4 border-[#f97316] ring-[#f97316] ring-1 w-full mt-3
                   ${
                     errors.phoneNumber
