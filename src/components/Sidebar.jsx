@@ -62,7 +62,7 @@ const Sidebar = () => {
                 <span className='w-20 h-20'>
                   <Logo />
                 </span>
-                <span style={{ color: currentColor }}>Exchage Car</span>
+                <span style={{ color: currentColor }}>Exchange Car</span>
               </div>
               <TooltipComponent content='Menu' position='BottomCenter'>
                 <button
