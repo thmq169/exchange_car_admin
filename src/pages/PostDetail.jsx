@@ -348,7 +348,7 @@ const PostDetail = (props) => {
                   </div>
                 </div>
               </div>
-              {user && user.user_roles.includes('Individual Customer') && (
+              {user && parentData.customer.id === user.id && user.user_roles.includes('Individual Customer') && (
                 <div className='w-full mt-4'>
                   <div className='ml-auto flex gap-3 w-fit'>
                     <button
