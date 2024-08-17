@@ -25,7 +25,7 @@ import { gridPostStatus } from '../components/GridTable/post'
 import DropDown from '../components/DropDown'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../store/reducers/app-slice'
-import { showToastError, showToastSuccess } from '../helpers'
+import { showToastError } from '../helpers'
 import { calculateCostForPublisDay, getLocalStorageAcceToken } from '../utils'
 import { useAppSelector } from '../hooks/hook'
 import { selectUser } from '../store/reducers/auth-slice'
@@ -101,7 +101,6 @@ const PostDetail = (props) => {
       setCustomer(props.customer)
     }
     setListDatePublished([7, 15, 20, 30])
-    showToastSuccess({ message: 'Payment success!' })
   }, [car_slug, props])
 
   const publishPost = async (post_id) => {
