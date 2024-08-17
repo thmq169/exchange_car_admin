@@ -25,8 +25,8 @@ import { gridPostStatus } from '../components/GridTable/post'
 import DropDown from '../components/DropDown'
 import { useDispatch } from 'react-redux'
 import { setLoading } from '../store/reducers/app-slice'
-import { showToastError } from '../helpers'
-import { getLocalStorageAcceToken } from '../utils'
+import { showToastError, showToastSuccess } from '../helpers'
+import { calculateCostForPublisDay, getLocalStorageAcceToken } from '../utils'
 import { useAppSelector } from '../hooks/hook'
 import { selectUser } from '../store/reducers/auth-slice'
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'
@@ -83,6 +83,7 @@ const PostDetail = (props) => {
   const navigate = useNavigate()
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [showModalUpdate, setShowModalUpdate] = useState(false)
+  const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
@@ -100,6 +101,7 @@ const PostDetail = (props) => {
       setCustomer(props.customer)
     }
     setListDatePublished([7, 15, 20, 30])
+    showToastSuccess({ message: 'Payment success!' })
   }, [car_slug, props])
 
   const publishPost = async (post_id) => {
@@ -141,27 +143,33 @@ const PostDetail = (props) => {
                     <Header category='Page' title='Post Detail' />
                     <div className='mb-5'>{gridPostStatus(parentData)}</div>
                   </div>
-                  <div className='flex items-end justify-between gap-3 w-1/3'>
+                  <div className='flex justify-center items-start gap-3 flex-col w-1/3'>
                     {parentData.post_status === 'Draft' && (
                       <>
-                        <div className='w-[60%]'>
-                          <DropDown
-                            label='Days published'
-                            options={listDatePublished}
-                            onSelect={(date) => {
-                              setDayPublished(date)
+                        <div className='flex items-end justify-between gap-3 w-full'>
+                          <div className='w-[60%]'>
+                            <DropDown
+                              label='Days published'
+                              options={listDatePublished}
+                              onSelect={(date) => {
+                                setDayPublished(date)
+                                setCostDays(Number(date) * 2000)
+                              }}
+                              className='z-[44]'
+                            />
+                          </div>
+                          <button
+                            className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base px-3 py-[18px] hover:bg-opacity-80 w-[40%]'
+                            onClick={() => {
+                              publishPost(parentData.id)
                             }}
-                            className='z-[44]'
-                          />
+                          >
+                            Publish Now
+                          </button>
                         </div>
-                        <button
-                          className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base px-3 py-[18px] hover:bg-opacity-80 w-[40%]'
-                          onClick={() => {
-                            publishPost(parentData.id)
-                          }}
-                        >
-                          Publish Now
-                        </button>
+                        <div className='text-right text-sm font-semibold italic w-[60%] pr-3'>
+                          Cost: {Number(costDays).toLocaleString('en-US')} VND
+                        </div>
                       </>
                     )}
                   </div>
