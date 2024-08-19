@@ -14,7 +14,7 @@ import { customerService } from '../services/customer.service'
 import { authService } from '../services/auth.service'
 import { showToastError, showToastSuccess } from '../helpers'
 
-const OwnerDetail = ({ customer, enableUpdate = false }) => {
+const OwnerDetail = ({ customer, title, enableUpdate = false }) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectUser)
   const [defaultAvatar, setDefaultAvatar] = useState(null)
@@ -85,7 +85,7 @@ const OwnerDetail = ({ customer, enableUpdate = false }) => {
     owner && (
       <div>
         <div className='w-fit bg-[#f97316] rounded-tr-lg rounded-tl-lg gap-[-16px] bg-opacity-80 px-8 py-2 text-white font-medium'>
-          Owner
+          {title ?? 'Owner'}
         </div>
         <div className='border-[#f97316] border p-4 rounded-tr-lg rounded-br-lg rounded-bl-lg overflow-hidden'>
           <div className='grid grid-cols-2 gap-6 ' dir='rtl'>

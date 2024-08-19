@@ -7,7 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/zoom'
 import 'swiper/css/thumbs'
-import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar, FaTrashAlt } from 'react-icons/fa'
+import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar, FaHeart, FaTrashAlt } from 'react-icons/fa'
 import { SiBrandfolder, SiCoronaengine } from 'react-icons/si'
 import { MdLocationCity, MdModelTraining, MdOutlineAirlineSeatReclineNormal, MdOutlineUploadFile } from 'react-icons/md'
 import { BsCalendar2Date, BsCreditCard2Front, BsFillPinMapFill, BsSpeedometer2 } from 'react-icons/bs'
@@ -32,6 +32,7 @@ import { selectUser } from '../store/reducers/auth-slice'
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'
 import ModalConfirmDelete from '../components/ModalConfirmDelete'
 import ModalUpdatePost from '../components/ModalUpdatePost'
+import { FiEye } from 'react-icons/fi'
 
 export const DetailTag = ({
   heading,
@@ -123,6 +124,8 @@ const PostDetail = (props) => {
     }
   }
 
+  console.log(customer)
+
   return (
     post && (
       <>
@@ -140,10 +143,28 @@ const PostDetail = (props) => {
                 <div className='flex justify-between items-center'>
                   <div className='flex items-center justify-between gap-3'>
                     <Header category='Page' title='Post Detail' />
+                    {parentData.post_status !== 'Draft' && (
+                      <div className='flex gap-3 mb-5'>
+                        <div className='px-4 py-2 rounded-lg overflow-hidden flex justify-between items-center gap-1 border-[#f97316] border bg-[#f97316] bg-opacity-5'>
+                          <strong>Views:</strong>
+                          <div className='flex justify-center items-center gap-2 text-[#f97316]'>
+                            100
+                            <FiEye />
+                          </div>
+                        </div>
+                        <div className='px-4 py-2 rounded-lg overflow-hidden flex justify-between items-center gap-1 border-[#f97316] border bg-[#f97316] bg-opacity-5'>
+                          <strong>Favorites:</strong>
+                          <div className='flex justify-center items-center gap-2 text-[#f97316]'>
+                            50
+                            <FaHeart />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className='mb-5'>{gridPostStatus(parentData)}</div>
                   </div>
                   <div className='flex justify-center items-start gap-3 flex-col w-1/3'>
-                    {parentData.post_status === 'Draft' && (
+                    {parentData.post_status === 'Draft' && user && user.user_roles.includes('Individual Customer') && (
                       <>
                         <div className='flex items-end justify-between gap-3 w-full'>
                           <div className='w-[60%]'>
@@ -170,6 +191,16 @@ const PostDetail = (props) => {
                           Cost: {Number(costDays).toLocaleString('en-US')} VND
                         </div>
                       </>
+                    )}
+                    {parentData.post_status === 'Active' && user && user.user_roles.includes('Admin') && (
+                      <div className='flex gap-2 justify-end w-full'>
+                        <button className='rounded-xl text-[#f97316] bg-[#F5F7FF] border border-[#f97316] text-base p-3 hover:bg-opacity-80 w-[20%]'>
+                          Refurnd
+                        </button>
+                        <button className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-[20%]'>
+                          Sold
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -347,7 +378,7 @@ const PostDetail = (props) => {
                         <DetailTag
                           className='col-span-2'
                           heading='Description'
-                          description={post.description}
+                          description={post.description ?? ''}
                           icon={<BsCreditCard2Front className='w-5 h-5' />}
                         />
                       </div>
@@ -389,7 +420,9 @@ const PostDetail = (props) => {
                 </div>
               )}
             </div>
-            {!props.hideOwner && <OwnerDetail customer={customer} />}
+            {user && user.user_roles.includes('Admin') && <OwnerDetail customer={customer} />}
+
+            <OwnerDetail title='Support specialist' customer={customer} />
           </div>
         </div>
       </>

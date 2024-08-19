@@ -175,3 +175,24 @@ export const findObjectDifference = (obj1, obj2) => {
 export const isObjectEmpty = (objectName) => {
   return objectName && Object.keys(objectName).length === 0 && objectName.constructor === Object
 }
+
+export const customersWithCars = (carData) => {
+  const customersWithCars = carData.reduce((acc, curr) => {
+    const customerId = curr.customer.id
+
+    const customerIndex = acc.findIndex((item) => item.customer.id === customerId)
+
+    if (customerIndex > -1) {
+      acc[customerIndex].cars.push(curr.car)
+    } else {
+      acc.push({
+        customer: curr.customer,
+        cars: [curr.car],
+      })
+    }
+
+    return acc
+  }, [])
+
+  return customersWithCars
+}

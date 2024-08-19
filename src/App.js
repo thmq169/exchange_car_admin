@@ -2,7 +2,20 @@ import React from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
-import { Analytics, Line, Area, Bar, Pie, Posts, SignIn, AddPost, Cars, Calendar } from './pages'
+import {
+  Analytics,
+  Line,
+  Area,
+  Bar,
+  Pie,
+  Posts,
+  SignIn,
+  AddPost,
+  Cars,
+  Calendar,
+  Customers,
+  CarCustomer,
+} from './pages'
 import './App.css'
 import MainLayout from './layouts/MainLayout'
 import AuthLayout from './layouts/AuthLayout'
@@ -28,6 +41,18 @@ const App = () => {
         {
           path: '/posts',
           element: <Posts />,
+        },
+        {
+          path: '/customers',
+          element: <Customers />,
+        },
+        {
+          path: '/customers/:customer_id',
+          element: <CarCustomer />,
+        },
+        {
+          path: '/customers/:customer_id/:car_slug',
+          element: <PostDetail />,
         },
         {
           path: '/posts/:car_slug',

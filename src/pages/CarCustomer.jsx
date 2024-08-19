@@ -20,21 +20,18 @@ import { Header } from '../components'
 import { postGrid } from '../components/GridTable/post'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { selectPostsUser, setPostsUser } from '../store/reducers/post-slice'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FaRegPlusSquare } from 'react-icons/fa'
-import { getLocalStorageAcceToken } from '../utils'
-import { selectUser, setUser } from '../store/reducers/auth-slice'
 import { showToastError } from '../helpers'
-import { authService } from '../services/auth.service'
 import { postsService } from '../services/post.service'
 
 const Car = () => {
+  const { customer_id } = useParams()
   const navigate = useNavigate()
   const editing = { allowDeleting: true, allowEditing: true }
   const toolbarOptions = ['Search']
   const filterSettings = { type: 'Excel' }
   const postsUser = useAppSelector(selectPostsUser)
-  const user = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
 
   const getListPostsUser = async (userId) => {
@@ -47,15 +44,9 @@ const Car = () => {
     }
   }
 
-  const fetchUser = async () => {
-    const response = await authService.getProfile(getLocalStorageAcceToken())
-    dispatch(setUser(response.data.data.currentUser))
-    getListPostsUser(response.data.data.currentUser.id)
-  }
-
   useEffect(() => {
-    fetchUser()
-  }, [])
+    getListPostsUser(customer_id)
+  }, [customer_id])
 
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>

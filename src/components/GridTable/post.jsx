@@ -10,10 +10,26 @@ import { useDispatch } from 'react-redux'
 import { setWishList } from '../../store/reducers/customer-slice'
 import ModalConfirmDelete from '../ModalConfirmDelete'
 import { useState } from 'react'
+import { useAppSelector } from '../../hooks/hook'
+import { selectUser } from '../../store/reducers/auth-slice'
 
 const gridPostImage = (props) => (
   <div>
     <img className='rounded-xl h-20 md:ml-3' src={props.car.car_galleries[0].gallery_url} alt='post-item' />
+  </div>
+)
+
+const gridUserImage = (props) => (
+  <div>
+    <img
+      className='rounded-xl h-20 md:ml-3'
+      src={
+        props.customer && props.customer.avatar_url !== null
+          ? props.customer.avatar_url
+          : '/images/profile/default_avatar.jpg'
+      }
+      alt='post-item'
+    />
   </div>
 )
 
@@ -45,31 +61,48 @@ const gridPostCustomerFullName = (props) => (
   </span>
 )
 
+const gridCustomerEmail = (props) => <span>{props.customer.email !== null ? props.customer.email : '-'}</span>
+
 const gridPostDateCreated = (props) => (
   <span>{props.posted_at !== null ? moment(props.posted_at).format('DD/MM/YYYY') : '-'}</span>
 )
 
+const gridPostDateExpired = (props) => (
+  <span>{props.expired_at !== null ? moment(props.expired_at).format('DD/MM/YYYY') : '-'}</span>
+)
+
 const GridPostAction = (props) => {
   const [showModalDelete, setShowModalDelete] = useState(false)
+  const user = useAppSelector(selectUser)
+
+  const path =
+    user && user.user_roles.includes('Admin')
+      ? `customers/${props.customer.id}`
+      : window.location.pathname.split('/').pop()
+
   return (
-    <div className='flex gap-1 justify-between'>
+    <div className='flex gap-1 justify-center'>
       <Link
-        to={`/${window.location.pathname.split('/').pop()}/${props.car.car_slug}`}
+        to={`/${path}/${props.car.car_slug}`}
         className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
       >
         Detail
       </Link>
-      <TooltipComponent
-        content={`Delete ${props.car.car_name}`}
-        position='TopCenter'
-        tabIndex={0}
-        onClick={() => setShowModalDelete(true)}
-      >
-        <button className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'>
-          <FaTrashAlt className='w-full h-full' />
-        </button>
-      </TooltipComponent>
-      {showModalDelete && <ModalConfirmDelete setShow={setShowModalDelete} data={props} />}
+      {user && user.user_roles.includes('Individual Customer') && (
+        <>
+          <TooltipComponent
+            content={`Delete ${props.car.car_name}`}
+            position='TopCenter'
+            tabIndex={0}
+            onClick={() => setShowModalDelete(true)}
+          >
+            <button className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'>
+              <FaTrashAlt className='w-full h-full' />
+            </button>
+          </TooltipComponent>
+          {showModalDelete && <ModalConfirmDelete setShow={setShowModalDelete} data={props} />}
+        </>
+      )}
     </div>
   )
 }
@@ -106,6 +139,19 @@ const GridWishListAction = (props) => {
   )
 }
 
+const GridCustomerAction = (props) => {
+  return (
+    <div className='flex gap-1 justify-center'>
+      <Link
+        to={`/customers/${props.customer.id}`}
+        className='text-white hover:bg-opacity-75 bg-[#f97316] py-2 px-4 capitalize rounded-lg text-md'
+      >
+        Detail
+      </Link>
+    </div>
+  )
+}
+
 GridPostAction.propTypes = {
   car: PropTypes.shape({
     car_slug: PropTypes.string.isRequired,
@@ -127,7 +173,7 @@ export const postGrid = [
   },
   {
     field: 'car.id',
-    headerText: 'Post ID',
+    headerText: 'ID',
     width: '80',
     textAlign: 'Center',
   },
@@ -138,25 +184,37 @@ export const postGrid = [
     editType: 'dropdownedit',
     textAlign: 'Center',
   },
-  { headerText: 'Customer', width: '150', textAlign: 'Center', template: gridPostCustomerFullName },
+  { headerText: 'Customer', width: '100', textAlign: 'Center', template: gridPostCustomerFullName },
   {
-    headerText: 'Date Posted',
+    headerText: 'Posted',
     textAlign: 'Center',
     width: '100',
     template: gridPostDateCreated,
+  },
+  {
+    headerText: 'Expired',
+    width: '100',
+    template: gridPostDateExpired,
+    textAlign: 'Center',
+  },
+  {
+    field: 'days_displayed',
+    headerText: 'Days Published',
+    width: '80',
+    textAlign: 'Center',
   },
   {
     headerText: 'Status',
     template: gridPostStatus,
     field: 'post_status',
     textAlign: 'Center',
-    width: '100',
+    width: '80',
   },
   {
     headerText: 'Action',
     template: GridPostAction,
     textAlign: 'Center',
-    width: '100',
+    width: '150',
   },
 ]
 
@@ -194,6 +252,46 @@ export const wishListGrid = [
   {
     headerText: 'Action',
     template: GridWishListAction,
+    textAlign: 'Center',
+    width: '100',
+  },
+]
+
+export const customerGrid = [
+  {
+    headerText: 'Avatar',
+    template: gridUserImage,
+    textAlign: 'Center',
+    width: '120',
+  },
+  {
+    field: 'customer.first_name',
+    headerText: 'First Name',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    field: 'customer.last_name',
+    headerText: 'Last Name',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    field: 'customer.mobile_phone',
+    headerText: 'Mobile Phone',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    field: 'customer.email',
+    template: gridCustomerEmail,
+    headerText: 'Email',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    headerText: 'Action',
+    template: GridCustomerAction,
     textAlign: 'Center',
     width: '100',
   },

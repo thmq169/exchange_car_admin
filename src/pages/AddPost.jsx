@@ -54,6 +54,9 @@ const TOOLBAR_SETTINGS = {
   ],
 }
 
+const packageMemberships = ['Standard', 'Premium']
+const costPackages = [2000, 6000]
+
 export const Input = ({ label, name, value, placeholder, type, min, max, handleChange, className, options }) => {
   return (
     <div className={`flex flex-col items-center justify-center w-full gap-1 ${className}`}>
@@ -98,7 +101,9 @@ const AddPost = ({ showBreadCurmb = true }) => {
   const [status, setStatus] = useState(null)
   const [years, setYears] = useState(null)
   const [dayPublished, setDayPublished] = useState(null)
+  const [day, setDay] = useState(null)
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
+  const [packageMembership, setPackageMembership] = useState(packageMemberships[0])
 
   useEffect(() => {
     setYears(yearRange.reverse())
@@ -228,6 +233,8 @@ const AddPost = ({ showBreadCurmb = true }) => {
     getOrigins()
     getStatus()
     setDayPublished([7, 15, 20, 30])
+    setDay(7)
+    setCostDays(7 * costPackages[0])
   }
 
   const handlePost = async (publish) => {
@@ -452,13 +459,26 @@ const AddPost = ({ showBreadCurmb = true }) => {
                             className='z-[43]'
                           />
                           <DropDown
+                            label='Package'
+                            options={packageMemberships}
+                            onSelect={(packageItem) => {
+                              setFormData((pre) => ({ ...pre, package: packageItem }))
+                              setPackageMembership(packageItem)
+                              const indexPackage = packageMemberships.indexOf(packageItem)
+                              setCostDays(day * costPackages[indexPackage])
+                            }}
+                            className='z-[44]'
+                          />
+                          <DropDown
                             label='Days published'
                             options={dayPublished}
                             onSelect={(date) => {
                               setFormData((pre) => ({ ...pre, days_publish: date }))
-                              setCostDays(Number(date) * 2000)
+                              const indexPackage = packageMemberships.indexOf(packageMembership)
+                              setCostDays(Number(date) * costPackages[indexPackage])
+                              setDay(Number(date))
                             }}
-                            className='z-[44]'
+                            className='z-[43]'
                           />
                           <div></div>
                           <div></div>
