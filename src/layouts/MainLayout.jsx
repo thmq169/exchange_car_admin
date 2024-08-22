@@ -32,7 +32,10 @@ const MainLayout = () => {
       if (pathname === '/') {
         navigate('/cars')
       }
-      // navigate('/cars')
+    } else if (user.user_roles.includes('Staff')) {
+      if (pathname === '/') {
+        navigate('/assigned')
+      }
     }
   }
 
@@ -77,6 +80,10 @@ const MainLayout = () => {
       } else if (user.user_roles.includes('Individual Customer') && paymentStatus === null) {
         if (pathname === '/') {
           navigate('/cars')
+        }
+      } else if (user.user_roles.includes('Staff')) {
+        if (pathname === '/') {
+          navigate('/assigned')
         }
       }
     }

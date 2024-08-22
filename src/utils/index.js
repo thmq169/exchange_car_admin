@@ -196,3 +196,27 @@ export const customersWithCars = (carData) => {
 
   return customersWithCars
 }
+
+export const addCustomerToCar = (carList, carId, newCustomer) => {
+  const carIndex = carList.findIndex((car) => car.car === carId)
+
+  if (carIndex !== -1) {
+    // Car found, add new customer to the listCustomer array
+    const updatedCar = {
+      ...carList[carIndex],
+      listCustomer: [...carList[carIndex].listCustomer, newCustomer],
+    }
+
+    // Return the updated car list
+    return [...carList.slice(0, carIndex), updatedCar, ...carList.slice(carIndex + 1)]
+  } else {
+    // Car not found, create a new car with the new customer
+    return [
+      ...carList,
+      {
+        car: carId,
+        listCustomer: [newCustomer],
+      },
+    ]
+  }
+}

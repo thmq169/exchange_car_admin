@@ -18,3 +18,13 @@ export const schemaChangePassword = yup.object({
     .min(6, 'Confirm password minimum 6 characters')
     .required('Confirm password is required'),
 })
+
+export const schemaAddCustomerBuy = yup.object({
+  full_name: yup.string().required('Full name is required'),
+  phoneNumber: yup
+    .string()
+    .max(10)
+    .required('Phone number is required.')
+    .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits.'),
+  address: yup.string().required('Address is required'),
+})

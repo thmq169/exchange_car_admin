@@ -74,4 +74,26 @@ export const links = [
       },
     ],
   },
+  {
+    title: 'Your Works',
+    role: ['Staff'],
+    links: [
+      {
+        name: 'assigned',
+        icon: <FaCar />,
+      },
+      // {
+      //   name: 'assigned',
+      //   icon: <FaCar />,
+      // },
+      // {
+      //   name: 'assigned',
+      //   icon: <FaCar />,
+      // },
+      {
+        name: 'profile',
+        icon: <AiOutlineProfile />,
+      },
+    ],
+  },
 ]

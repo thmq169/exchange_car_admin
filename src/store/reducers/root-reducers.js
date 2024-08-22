@@ -5,6 +5,7 @@ import auth from './auth-slice'
 import car from './car-slice'
 import customer from './customer-slice'
 import app from './app-slice'
+import staff from './staff-slice'
 
 const rootReducer = combineReducers({
   app,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   auth,
   car,
   customer,
+  staff,
 })
 
 export default rootReducer

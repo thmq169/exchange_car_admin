@@ -33,6 +33,8 @@ const AuthLayout = () => {
         navigate('/analytics')
       } else if (user.user_roles.includes('Individual Customer')) {
         navigate('/cars')
+      } else if (user.user_roles.includes('Staff')) {
+        navigate('/assigned')
       }
     }
   }, [user, userToken, navigate])

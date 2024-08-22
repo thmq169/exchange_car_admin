@@ -15,6 +15,8 @@ import {
   Calendar,
   Customers,
   CarCustomer,
+  StaffPosts,
+  PostDetailStaff,
 } from './pages'
 import './App.css'
 import MainLayout from './layouts/MainLayout'
@@ -102,6 +104,14 @@ const App = () => {
         {
           path: '/calendars',
           element: <Calendar />,
+        },
+        {
+          path: '/assigned',
+          element: <StaffPosts />,
+        },
+        {
+          path: '/assigned/:car_slug',
+          element: <PostDetailStaff />,
         },
       ],
     },

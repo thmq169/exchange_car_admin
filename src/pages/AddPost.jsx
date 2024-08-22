@@ -382,7 +382,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                   <div className='hidden md:block'></div>
                   <div className='hidden md:block'></div>
                   <button
-                    className='rounded-full bg-[#f97316] text-[#F5F7FF] w-full p-3  hover:bg-opacity-80'
+                    className='rounded-xl bg-[#f97316] text-[#F5F7FF] w-full p-3  hover:bg-opacity-80'
                     // disabled={!showCarSpecs}
                     onClick={() => handleNextStep2()}
                   >
@@ -489,7 +489,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
                           <button
-                            className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
+                            className='rounded-xl bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
                             onClick={() => {
                               setShowStep1(true)
                               setShowStep2(false)
@@ -501,7 +501,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                           <div className='hidden md:block'></div>
                           <div className='hidden md:block'></div>
                           <button
-                            className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
+                            className='rounded-xl bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
                             onClick={() => {
                               setShowStep3(true)
                               setShowStep2(false)
@@ -544,7 +544,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
                           <button
-                            className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
+                            className='rounded-xl bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
                             onClick={() => {
                               setShowStep2(true)
                               setShowStep3(false)
@@ -556,7 +556,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                           <div className='hidden md:block'></div>
                           <div className='flex justify-between items-center gap-2'>
                             <button
-                              className='rounded-full bg-[#DBDBDB] text-[#646464]  p-3 w-full  hover:bg-opacity-80'
+                              className='rounded-xl bg-[#DBDBDB] text-[#646464]  p-3 w-full  hover:bg-opacity-80'
                               onClick={() => {
                                 handlePost(0)
                               }}
@@ -564,7 +564,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                               Save Draft
                             </button>
                             <button
-                              className='rounded-full bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
+                              className='rounded-xl bg-[#f97316] text-[#F5F7FF]  p-3 w-full  hover:bg-opacity-80'
                               onClick={() => {
                                 handlePost(1)
                               }}

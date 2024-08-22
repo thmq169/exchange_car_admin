@@ -174,7 +174,7 @@ export const postGrid = [
   {
     field: 'car.id',
     headerText: 'ID',
-    width: '80',
+    width: '60',
     textAlign: 'Center',
   },
   {
@@ -295,4 +295,31 @@ export const customerGrid = [
     textAlign: 'Center',
     width: '100',
   },
+]
+
+export const customerBuyGrid = [
+  {
+    field: 'full_name',
+    headerText: 'Buyer Full Name',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    field: 'phoneNumber',
+    headerText: 'Mobile Phone',
+    width: '150',
+    textAlign: 'Center',
+  },
+  {
+    field: 'address',
+    headerText: 'Address',
+    width: '150',
+    textAlign: 'Center',
+  },
+  // {
+  //   headerText: 'Action',
+  //   template: GridCustomerAction,
+  //   textAlign: 'Center',
+  //   width: '100',
+  // },
 ]
