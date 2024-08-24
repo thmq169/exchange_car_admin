@@ -1,5 +1,14 @@
 import { AiOutlineAreaChart, AiOutlineBarChart, AiOutlineProfile, AiOutlineStock } from 'react-icons/ai'
-import { FaBookmark, FaCar, FaCarAlt, FaRegCalendarAlt, FaUserAlt } from 'react-icons/fa'
+import {
+  FaAward,
+  FaBookmark,
+  FaCar,
+  FaCarAlt,
+  FaGem,
+  FaRegAddressBook,
+  FaRegCalendarAlt,
+  FaUserAlt,
+} from 'react-icons/fa'
 import { FiPieChart } from 'react-icons/fi'
 import { SiGoogleanalytics } from 'react-icons/si'
 
@@ -79,17 +88,17 @@ export const links = [
     role: ['Staff'],
     links: [
       {
-        name: 'assigned',
-        icon: <FaCar />,
+        name: 'standard',
+        icon: <FaRegAddressBook />,
       },
-      // {
-      //   name: 'assigned',
-      //   icon: <FaCar />,
-      // },
-      // {
-      //   name: 'assigned',
-      //   icon: <FaCar />,
-      // },
+      {
+        name: 'premium',
+        icon: <FaAward />,
+      },
+      {
+        name: 'vip',
+        icon: <FaGem />,
+      },
       {
         name: 'profile',
         icon: <AiOutlineProfile />,

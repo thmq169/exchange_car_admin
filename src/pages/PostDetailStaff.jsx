@@ -30,6 +30,8 @@ import ModalAddBuyers from '../components/ModalAddBuyers'
 // import { setCustomerBuy } from '../store/reducers/staff-slice'
 
 import ModalContract from '../components/ModalContract'
+import ModalUploadContract from '../components/ModalUploadContract'
+import ModalViewListContract from '../components/ModalViewListContract'
 
 export const DetailTag = ({
   heading,
@@ -77,7 +79,10 @@ const PostDetail = (props) => {
   const [showModalAdd, setShowModalAdd] = useState(false)
   const [showModalContract, setShowModalContract] = useState(false)
   const [showModalUploadContract, setShowModalUploadContract] = useState(false)
+  const [showModalViewContract, setShowModalViewContract] = useState(false)
   const [customerBuy, setCustomerBuy] = useState([])
+  const [contractPost, setContractPost] = useState([])
+  const [isUploadContract, setIsUploadContract] = useState(false)
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
@@ -86,10 +91,21 @@ const PostDetail = (props) => {
     setCustomer(response.data.data.customer)
 
     const listCustomerBuy = JSON.parse(localStorage.getItem('listCustomerBuy'))
+    const contracts = JSON.parse(localStorage.getItem('contracts-exchangecar'))
 
     if (listCustomerBuy !== null) {
       const list = listCustomerBuy.find((item) => item.car === response.data.data.id)
       setCustomerBuy(list !== undefined && list.listCustomer !== undefined ? list.listCustomer : [])
+    }
+
+    if (contracts !== null) {
+      const contractByPost = contracts.find((contract) => contract.postId === response.data.data.id)
+      console.log(contractByPost)
+
+      if (contractByPost !== undefined && contractByPost.listContractItems.length > 0) {
+        setIsUploadContract(true)
+        setContractPost(contractByPost.listContractItems)
+      }
     }
   }
 
@@ -148,7 +164,7 @@ const PostDetail = (props) => {
                     (user.user_roles.includes('Admin') || user.user_roles.includes('Staff')) && (
                       <div className='flex gap-2 justify-end w-full'>
                         <button className='rounded-xl text-[#f97316] bg-[#F5F7FF] border border-[#f97316] text-base p-3 hover:bg-opacity-80 w-[20%]'>
-                          Refurnd
+                          Refund
                         </button>
                         <button className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-[20%]'>
                           Sold
@@ -320,15 +336,29 @@ const PostDetail = (props) => {
               </div>
             </div>
             <div className='flex justify-end items-center gap-3 w-full'>
-              <button
-                onClick={() => setShowModalContract(true)}
-                className='rounded-xl text-[#f97316] border border-[#f97316] bg-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-fit '
-              >
-                Upload contracts
-              </button>
-              <button className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-fit'>
-                Ask for Authority
-              </button>
+              {isUploadContract ? (
+                <button
+                  onClick={() => setShowModalViewContract(true)}
+                  className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-fit'
+                >
+                  View authority contracts
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setShowModalContract(true)}
+                    className='rounded-xl text-[#f97316] border border-[#f97316] bg-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-fit '
+                  >
+                    Ask for Authority
+                  </button>
+                  <button
+                    onClick={() => setShowModalUploadContract(true)}
+                    className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base p-3 hover:bg-opacity-80 w-fit'
+                  >
+                    Upload contracts
+                  </button>
+                </>
+              )}
             </div>
             <OwnerDetail customer={customer} />
 
@@ -347,6 +377,18 @@ const PostDetail = (props) => {
                 <ModalAddBuyers setShow={setShowModalAdd} data={parentData} setCustomerBuy={setCustomerBuy} />
               )}
             </div>
+
+            {showModalViewContract && <ModalViewListContract setShow={setShowModalViewContract} data={contractPost} />}
+
+            {showModalUploadContract && (
+              <ModalUploadContract
+                setShow={setShowModalUploadContract}
+                data={parentData}
+                setShowModalViewContract={setShowModalViewContract}
+                setContractPost={setContractPost}
+                setIsUploadContract={setIsUploadContract}
+              />
+            )}
 
             {showModalContract && (
               <ModalContract setShow={setShowModalContract} data={{ owner: customer, post: parentData }} />

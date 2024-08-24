@@ -34,7 +34,7 @@ const MainLayout = () => {
       }
     } else if (user.user_roles.includes('Staff')) {
       if (pathname === '/') {
-        navigate('/assigned')
+        navigate('/standard')
       }
     }
   }
@@ -83,7 +83,7 @@ const MainLayout = () => {
         }
       } else if (user.user_roles.includes('Staff')) {
         if (pathname === '/') {
-          navigate('/assigned')
+          navigate('/standard')
         }
       }
     }

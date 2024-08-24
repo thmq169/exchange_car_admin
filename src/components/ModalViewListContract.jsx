@@ -1,11 +1,8 @@
 import { motion } from 'framer-motion'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { useClickOutside } from '../hooks/use-click-outside'
-import TemplateContract from './TemplateContract'
-import ReactToPrint from 'react-to-print'
-import jsPDF from 'jspdf'
 
-const ModalContract = ({ setShow, data, setPost }) => {
+const ModalViewListContract = ({ setShow, data }) => {
   const nodeRef = useClickOutside(() => {
     setShow(false)
   })
@@ -14,16 +11,6 @@ const ModalContract = ({ setShow, data, setPost }) => {
     setShow(false)
   }, [setShow])
 
-  const componentRef = useRef()
-
-  const handlePrint = () => {
-    const doc = new jsPDF({
-      format: 'a4',
-      unit: 'cm',
-    })
-    doc.html(componentRef.current)
-    handleOffModal()
-  }
   return (
     <div className='fixed inset-0 z-[200] flex px-4 md:p-0 overflow-hidden'>
       <div className='absolute inset-0 bg-[rgba(244,244,244,0.30)] backdrop-blur-custom'></div>
@@ -44,19 +31,15 @@ const ModalContract = ({ setShow, data, setPost }) => {
           </button>
         </div>
         <div className='h-full overflow-y-auto'>
-          <div ref={componentRef} className='w-full p-12 pl-8 overflow-y-auto overflow-x-hidden flex flex-col'>
-            <TemplateContract car={data.post.car} />
-          </div>
-          <div>
-            <ReactToPrint
-              trigger={() => (
-                <button className='rounded-xl px-4 py-3 ml-auto mt-4 text-[#EDF5FF] flex-1 text-lg bg-[#f97316] w-fit absolute right-12 bottom-5'>
-                  Print to PDF
-                </button>
-              )}
-              content={() => componentRef.current}
-              onAfterPrint={handlePrint}
-            />
+          <div className='w-full p-12 pl-8 overflow-y-auto overflow-x-hidden flex flex-col gap-4'>
+            {data.map((contract) => (
+              <img
+                key={contract}
+                src={contract}
+                className='w-full h-auto border border-gray-200 rounded-lg shadow-lg'
+                alt={contract}
+              />
+            ))}
           </div>
         </div>
       </motion.div>
@@ -64,4 +47,4 @@ const ModalContract = ({ setShow, data, setPost }) => {
   )
 }
 
-export default ModalContract
+export default ModalViewListContract

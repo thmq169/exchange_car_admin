@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   GridComponent,
   ColumnsDirective,
@@ -29,11 +29,13 @@ import useGetData from '../hooks/use-get-data'
 
 const Car = () => {
   const navigate = useNavigate()
+
   const editing = { allowDeleting: true, allowEditing: true }
   const toolbarOptions = ['Search']
   const filterSettings = { type: 'Excel' }
   const dispatch = useAppDispatch()
   const { posts } = useGetData()
+  const [postByPackage, setPostByPackage] = useState([])
 
   const getListPostsUser = async (userId) => {
     try {
@@ -55,14 +57,25 @@ const Car = () => {
     fetchUser()
   }, [])
 
+  useEffect(() => {
+    if (posts !== null) {
+      const pathname = window.location.pathname
+      const packageName = pathname.replace('/', '')
+
+      const newPosts = posts.filter((post) => String(post.package_option).toLocaleLowerCase() === packageName)
+
+      setPostByPackage(newPosts)
+    }
+  }, [window.location.pathname])
+
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
       <div className='flex justify-between items-center'>
         <Header category='Page' title='Your Car Assigned' />
       </div>
-      {posts && (
+      {postByPackage.length > 0 && (
         <GridComponent
-          dataSource={[...posts.slice(0, 5)].reverse()}
+          dataSource={[...postByPackage].reverse()}
           allowPaging
           allowSorting
           allowExcelExport

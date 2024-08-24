@@ -76,6 +76,7 @@ const PostDetail = (props) => {
   const [activeThumb, setActiveThumb] = useState(null)
   const [post, setPost] = useState(null)
   const [customer, setCustomer] = useState(null)
+  const [staff, setStaff] = useState(null)
   const [parentData, setParentData] = useState(null)
   const [isShowBreadcrumbs, setIsShowBreadcrumbs] = useState(false)
   const [listDatePublished, setListDatePublished] = useState([7, 15, 20, 30])
@@ -91,6 +92,7 @@ const PostDetail = (props) => {
     setParentData(response.data.data)
     setPost(response.data.data.car)
     setCustomer(response.data.data.customer)
+    setCustomer(response.data.data.staff)
     setIsShowBreadcrumbs(true)
   }
 
@@ -123,8 +125,6 @@ const PostDetail = (props) => {
       dispatch(setLoading(false))
     }
   }
-
-  console.log(customer)
 
   return (
     post && (
@@ -422,7 +422,7 @@ const PostDetail = (props) => {
             </div>
             {user && user.user_roles.includes('Admin') && <OwnerDetail customer={customer} />}
 
-            <OwnerDetail title='Support specialist' customer={customer} />
+            <OwnerDetail title='Support specialist' customer={staff} />
           </div>
         </div>
       </>

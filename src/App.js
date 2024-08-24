@@ -106,11 +106,27 @@ const App = () => {
           element: <Calendar />,
         },
         {
-          path: '/assigned',
+          path: '/standard',
           element: <StaffPosts />,
         },
         {
-          path: '/assigned/:car_slug',
+          path: '/standard/:car_slug',
+          element: <PostDetailStaff />,
+        },
+        {
+          path: '/premium',
+          element: <StaffPosts />,
+        },
+        {
+          path: '/premium/:car_slug',
+          element: <PostDetailStaff />,
+        },
+        {
+          path: '/vip',
+          element: <StaffPosts />,
+        },
+        {
+          path: '/vip/:car_slug',
           element: <PostDetailStaff />,
         },
       ],

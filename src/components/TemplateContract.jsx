@@ -3,7 +3,7 @@ import React from 'react'
 import { useAppSelector } from '../hooks/hook'
 import { selectUser } from '../store/reducers/auth-slice'
 
-const TemplateContract = ({ ref, className, print }) => {
+const TemplateContract = ({ car }) => {
   const day = moment().date()
   const month = moment().month()
   const year = moment().year()
@@ -80,9 +80,15 @@ const TemplateContract = ({ ref, className, print }) => {
         </div>
 
         <h1 className='font-bold mt-6 ml-2'>ĐIỀU 1. NỘI DUNG ỦY QUYỀN:</h1>
-        <p className='mt-4 ml-2'>Nay ủy quyền cho Bên được ủy quyền mua bán xe nhãn hiệu: ..........................</p>
-        <p className='mt-4 ml-2'>Loại xe: ................</p>
-        <p className='mt-4 ml-2'>Màu sơn: .........</p>
+        <p className='mt-4 ml-2'>
+          Nay ủy quyền cho Bên được ủy quyền mua bán xe nhãn hiệu: <strong>{car.car_brand}</strong>{' '}
+        </p>
+        <p className='mt-4 ml-2'>
+          Loại xe: <strong>{car.car_model}</strong>
+        </p>
+        <p className='mt-4 ml-2'>
+          Màu sơn:<strong> {car.out_color}</strong>
+        </p>
         <p className='mt-4 ml-2'>Số máy: .............</p>
       </div>
       <div>
