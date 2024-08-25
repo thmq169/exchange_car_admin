@@ -16,12 +16,14 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from '@syncfusion/ej2-react-richtexteditor'
-import { calculateCostForPublisDay, formatContent } from '../utils'
+import { calculateCostForPublisDay, formatContent, getLocalStorageAcceToken } from '../utils'
 import { postsService } from '../services/post.service'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { addPost, selectPosts } from '../store/reducers/post-slice'
 import { setLoading } from '../store/reducers/app-slice'
+import { FaFeatherAlt } from 'react-icons/fa'
+import { selectUser } from '../store/reducers/auth-slice'
 
 const TOOLBAR_SETTINGS = {
   items: [
@@ -54,8 +56,8 @@ const TOOLBAR_SETTINGS = {
   ],
 }
 
-const packageMemberships = ['Standard', 'Premium']
-const costPackages = [2000, 6000]
+const packageMemberships = ['Standard', 'Premium', 'VIP']
+const costPackages = [2000, 6000, 10000]
 
 export const Input = ({ label, name, value, placeholder, type, min, max, handleChange, className, options }) => {
   return (
@@ -84,6 +86,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const posts = useAppSelector(selectPosts)
+  const user = useAppSelector(selectUser)
   const { brands, queryTable } = useGetData()
   const [showCarSpecs, setShowCarSpecs] = useState(false)
   const [showMileage, setShowMileage] = useState(true)
@@ -104,6 +107,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
   const [day, setDay] = useState(null)
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
   const [packageMembership, setPackageMembership] = useState(packageMemberships[0])
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
     setYears(yearRange.reverse())
@@ -295,6 +299,42 @@ const AddPost = ({ showBreadCurmb = true }) => {
     }
   }
 
+  const handleGenerateDesAI = async () => {
+    dispatch(setLoading(true))
+
+    const instance = rteObj
+    instance.updateValue()
+    const text = formatContent(instance.value)
+
+    try {
+      const genDesForm = {
+        car_brand: formData.car_brand,
+        car_model: formData.car_model,
+        manufacturing_date: formData.manufacturing_date,
+        body_type: formData.body_type,
+        out_color: formData.out_color,
+        city: formData.city,
+        car_origin: formData.car_origin,
+        car_status: formData.car_status,
+        car_mileage: formData.car_mileage ?? 0,
+        short_description: text,
+        selling_price: formData.selling_price,
+        mobile_phone: user.mobile_phone,
+      }
+
+      const res = await postsService.generateDescriptionAI({
+        data: genDesForm,
+        access_token: getLocalStorageAcceToken(),
+      })
+
+      setDescription(res.data.data)
+    } catch (error) {
+      showToastError({ message: 'Fail generate description' })
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
   let rteObj
   function created() {
     const instance = rteObj
@@ -462,7 +502,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                             label='Package'
                             options={packageMemberships}
                             onSelect={(packageItem) => {
-                              setFormData((pre) => ({ ...pre, package: packageItem }))
+                              setFormData((pre) => ({ ...pre, package_option: packageItem }))
                               setPackageMembership(packageItem)
                               const indexPackage = packageMemberships.indexOf(packageItem)
                               setCostDays(day * costPackages[indexPackage])
@@ -526,7 +566,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                       <div className='flex h-auto flex-col outline-none w-full'>
                         <h2 className='text-2xl font-semibold mb-4'>Step 3</h2>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 relative'>
-                          <div className='col-span-4 ' id='edittor'>
+                          <div className='col-span-4 relative' id='edittor'>
                             <RichTextEditorComponent
                               toolbarSettings={TOOLBAR_SETTINGS}
                               height='300px'
@@ -535,12 +575,19 @@ const AddPost = ({ showBreadCurmb = true }) => {
                               }}
                               created={created.bind(this)}
                               placeholder='Your description here'
+                              value={description}
                             >
                               <></>
 
                               <Inject services={[HtmlEditor, Toolbar, Image, Link, QuickToolbar]} />
                             </RichTextEditorComponent>
                           </div>
+                          <button
+                            onClick={() => handleGenerateDesAI()}
+                            className='absolute right-0 z-10 text-white font-semibold flex gap-2 items-center text-lg bottom-0 px-4 py-2 bg-[#f97316] rounded-lg'
+                          >
+                            <FaFeatherAlt /> <span className='text-sm'>Help with AI</span>
+                          </button>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
                           <button

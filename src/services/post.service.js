@@ -3,6 +3,7 @@ import {
   CREATE_DRAFT_POST,
   CREATE_PUBLISH_POST,
   DELETE_POST,
+  GENERATE_DESCRIPTION,
   GET_LATEST_POST,
   GET_POST,
   GET_POSTS,
@@ -61,6 +62,13 @@ export const postsService = {
     return axiosClient.patch(UPDATE_POST + `/${post_id}`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+  },
+  generateDescriptionAI: ({ data, access_token }) => {
+    return axiosClient.post(GENERATE_DESCRIPTION, data, {
+      headers: {
         Authorization: `Bearer ${access_token}`,
       },
     })

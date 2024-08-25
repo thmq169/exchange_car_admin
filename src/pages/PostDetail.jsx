@@ -33,6 +33,10 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups'
 import ModalConfirmDelete from '../components/ModalConfirmDelete'
 import ModalUpdatePost from '../components/ModalUpdatePost'
 import { FiEye } from 'react-icons/fi'
+import StaffDetail from '../components/StaffProfile'
+
+const packageMemberships = ['Standard', 'Premium', 'VIP']
+const costPackages = [2000, 6000, 10000]
 
 export const DetailTag = ({
   heading,
@@ -86,13 +90,15 @@ const PostDetail = (props) => {
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [showModalUpdate, setShowModalUpdate] = useState(false)
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
+  const [day, setDay] = useState(null)
+  const [packageMembership, setPackageMembership] = useState(packageMemberships[0])
 
   const fetchPost = async () => {
     const response = await postsService.getPost(car_slug)
     setParentData(response.data.data)
     setPost(response.data.data.car)
     setCustomer(response.data.data.customer)
-    setCustomer(response.data.data.staff)
+    setStaff(response.data.data.staff)
     setIsShowBreadcrumbs(true)
   }
 
@@ -111,7 +117,7 @@ const PostDetail = (props) => {
     try {
       const response = await postsService.publishPost({
         post_id: post_id,
-        data: { days_publish: dayPublished },
+        data: { days_publish: dayPublished, package_option: packageMembership },
         access_token: getLocalStorageAcceToken(),
       })
 
@@ -163,23 +169,37 @@ const PostDetail = (props) => {
                     )}
                     <div className='mb-5'>{gridPostStatus(parentData)}</div>
                   </div>
-                  <div className='flex justify-center items-start gap-3 flex-col w-1/3'>
+                  <div className='flex justify-center items-start gap-3 flex-col w-1/2'>
                     {parentData.post_status === 'Draft' && user && user.user_roles.includes('Individual Customer') && (
                       <>
                         <div className='flex items-end justify-between gap-3 w-full'>
-                          <div className='w-[60%]'>
+                          <div className='w-1/3'>
+                            <DropDown
+                              label='Package'
+                              options={packageMemberships}
+                              onSelect={(packageItem) => {
+                                setPackageMembership(packageItem)
+                                const indexPackage = packageMemberships.indexOf(packageItem)
+                                setCostDays(day * costPackages[indexPackage])
+                              }}
+                              className='z-[44]'
+                            />
+                          </div>
+                          <div className='w-1/3'>
                             <DropDown
                               label='Days published'
                               options={listDatePublished}
                               onSelect={(date) => {
                                 setDayPublished(date)
-                                setCostDays(Number(date) * 2000)
+                                const indexPackage = packageMemberships.indexOf(packageMembership)
+                                setCostDays(Number(date) * costPackages[indexPackage])
+                                setDay(Number(date))
                               }}
                               className='z-[44]'
                             />
                           </div>
                           <button
-                            className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base px-3 py-[18px] hover:bg-opacity-80 w-[40%]'
+                            className='rounded-xl bg-[#f97316] text-[#F5F7FF] text-base px-3 py-[18px] hover:bg-opacity-80 w-1/3'
                             onClick={() => {
                               publishPost(parentData.id)
                             }}
@@ -187,8 +207,12 @@ const PostDetail = (props) => {
                             Publish Now
                           </button>
                         </div>
-                        <div className='text-right text-sm font-semibold italic w-[60%] pr-3'>
-                          Cost: {Number(costDays).toLocaleString('en-US')} VND
+                        <div className='flex items-end justify-between gap-3 w-full'>
+                          <div className='w-1/3'></div>
+                          <div className='text-right text-sm font-semibold italic w-1/3 pr-3'>
+                            Cost: {Number(costDays).toLocaleString('en-US')} VND
+                          </div>
+                          <div className='w-1/3'></div>
                         </div>
                       </>
                     )}
@@ -422,7 +446,7 @@ const PostDetail = (props) => {
             </div>
             {user && user.user_roles.includes('Admin') && <OwnerDetail customer={customer} />}
 
-            <OwnerDetail title='Support specialist' customer={staff} />
+            <StaffDetail title='Support specialist' staff={staff} />
           </div>
         </div>
       </>

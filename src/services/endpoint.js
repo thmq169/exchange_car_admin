@@ -16,6 +16,7 @@ export const UPDATE_POST = `${APP}/${POST_SERVICE}`
 export const CREATE_PUBLISH_POST = `${APP}/${POST_SERVICE}/publish`
 export const CREATE_DRAFT_POST = `${APP}/${POST_SERVICE}/draft`
 export const GET_POSTS_USER = `${APP}/${POST_SERVICE}/customer`
+export const GENERATE_DESCRIPTION = `${APP}/${POST_SERVICE}/generate-description`
 
 // auth
 export const LOGIN = `${APP}/${AUTH_SERVICE}/sign-in`
