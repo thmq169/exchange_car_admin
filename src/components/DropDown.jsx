@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const DropDown = ({ label, options, value, onSelect, className }) => {
+const DropDown = ({ label, options, value, onSelect, className, moreOption, moreOptionClick }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState()
 
@@ -42,7 +42,12 @@ const DropDown = ({ label, options, value, onSelect, className }) => {
 
   return (
     <div className={`flex flex-col items-center justify-start w-full gap-1 ${className}`}>
-      <p className='w-full font-medium text-secondary '>{label}</p>
+      <p className='w-full font-medium text-secondary flex gap-2 justify-start items-center'>
+        {label}{' '}
+        <span className='cursor-pointer' onClick={() => moreOptionClick()}>
+          {moreOption ?? ''}
+        </span>
+      </p>
       <div className='relative h-16 w-full'>
         <button
           className={` ${className} min-h-full absolute flex max-h-72 w-full cursor-pointer flex-col gap-6 rounded-2xl bg-[#F7F8F9] p-5 capitalize text-secondary transition-all ${

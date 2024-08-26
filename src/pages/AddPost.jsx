@@ -22,8 +22,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { addPost, selectPosts } from '../store/reducers/post-slice'
 import { setLoading } from '../store/reducers/app-slice'
-import { FaFeatherAlt } from 'react-icons/fa'
 import { selectUser } from '../store/reducers/auth-slice'
+import { FaRegQuestionCircle } from 'react-icons/fa'
+import ModalViewPackages from '../components/ModalViewPackages'
 
 const TOOLBAR_SETTINGS = {
   items: [
@@ -108,6 +109,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
   const [packageMembership, setPackageMembership] = useState(packageMemberships[0])
   const [description, setDescription] = useState('')
+  const [showModalPackages, setShowModalPackages] = useState(false)
 
   useEffect(() => {
     setYears(yearRange.reverse())
@@ -363,6 +365,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
             <Breadcrumbs />
           </div>
         )}
+        {showModalPackages && <ModalViewPackages setShow={setShowModalPackages} />}
         <div className='m-2 mt-10 md:mt-4 md:mx-10 p-2 md:p-10 bg-white rounded-3xl'>
           <div className='flex justify-between items-center'>
             <Header category='Page' title='Add Car Post' />
@@ -507,6 +510,8 @@ const AddPost = ({ showBreadCurmb = true }) => {
                               const indexPackage = packageMemberships.indexOf(packageItem)
                               setCostDays(day * costPackages[indexPackage])
                             }}
+                            moreOption={<FaRegQuestionCircle />}
+                            moreOptionClick={() => setShowModalPackages(true)}
                             className='z-[44]'
                           />
                           <DropDown
@@ -582,12 +587,14 @@ const AddPost = ({ showBreadCurmb = true }) => {
                               <Inject services={[HtmlEditor, Toolbar, Image, Link, QuickToolbar]} />
                             </RichTextEditorComponent>
                           </div>
-                          <button
-                            onClick={() => handleGenerateDesAI()}
-                            className='absolute right-0 z-10 text-white font-semibold flex gap-2 items-center text-lg bottom-0 px-4 py-2 bg-[#f97316] rounded-lg'
-                          >
-                            <FaFeatherAlt /> <span className='text-sm'>Help with AI</span>
-                          </button>
+                          {/* {formData && formData.package_option === 'VIP' && (
+                            <button
+                              onClick={() => handleGenerateDesAI()}
+                              className='absolute right-0 z-10 text-white font-semibold flex gap-2 items-center text-lg bottom-0 px-4 py-2 bg-[#f97316] rounded-lg'
+                            >
+                              <FaFeatherAlt /> <span className='text-sm'>Help with AI</span>
+                            </button>
+                          )} */}
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 py-10 rounded-2xl'>
                           <button

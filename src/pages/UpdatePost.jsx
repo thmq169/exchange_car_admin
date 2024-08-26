@@ -14,10 +14,11 @@ import {
   Toolbar,
 } from '@syncfusion/ej2-react-richtexteditor'
 import { findObjectDifference, formatContent, getLocalStorageAcceToken } from '../utils'
-import { useAppDispatch } from '../hooks/hook'
+import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { setLoading } from '../store/reducers/app-slice'
 import { Input } from './AddPost'
 import { postsService } from '../services/post.service'
+import { selectQueryTable } from '../store/reducers/post-slice'
 
 const TOOLBAR_SETTINGS = {
   items: [
@@ -53,6 +54,7 @@ const TOOLBAR_SETTINGS = {
 const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
   const dispatch = useAppDispatch()
   const { brands, queryTable } = useGetData()
+  const query = useAppSelector(selectQueryTable)
   const [showMileage, setShowMileage] = useState(true)
   const [selectedImages, setSelectedImages] = useState([])
   const [models, setModels] = useState(null)
@@ -66,14 +68,16 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
   const [years, setYears] = useState(null)
 
   useEffect(() => {
-    setYears(yearRange.reverse())
-    setModel(data.car_model)
-    getVariant(data.manufacturing_date)
-    getCities()
-    getOrigins()
-    getOutColors()
-    getStatus()
-  }, [])
+    if (query !== null) {
+      setYears(yearRange.reverse())
+      setModel(data.car_model)
+      getVariant(data.manufacturing_date)
+      getCities()
+      getOrigins()
+      getOutColors()
+      getStatus()
+    }
+  }, [query])
 
   useEffect(() => {
     if (variants === null) {
