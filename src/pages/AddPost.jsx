@@ -16,7 +16,7 @@ import {
   RichTextEditorComponent,
   Toolbar,
 } from '@syncfusion/ej2-react-richtexteditor'
-import { calculateCostForPublisDay, formatContent, getLocalStorageAcceToken } from '../utils'
+import { calculateCostForPublisDay, formatContent } from '../utils'
 import { postsService } from '../services/post.service'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
@@ -108,7 +108,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
   const [day, setDay] = useState(null)
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
   const [packageMembership, setPackageMembership] = useState(packageMemberships[0])
-  const [description, setDescription] = useState('')
+  // const [description, setDescription] = useState('')
   const [showModalPackages, setShowModalPackages] = useState(false)
 
   useEffect(() => {
@@ -301,41 +301,41 @@ const AddPost = ({ showBreadCurmb = true }) => {
     }
   }
 
-  const handleGenerateDesAI = async () => {
-    dispatch(setLoading(true))
+  // const handleGenerateDesAI = async () => {
+  //   dispatch(setLoading(true))
 
-    const instance = rteObj
-    instance.updateValue()
-    const text = formatContent(instance.value)
+  //   const instance = rteObj
+  //   instance.updateValue()
+  //   const text = formatContent(instance.value)
 
-    try {
-      const genDesForm = {
-        car_brand: formData.car_brand,
-        car_model: formData.car_model,
-        manufacturing_date: formData.manufacturing_date,
-        body_type: formData.body_type,
-        out_color: formData.out_color,
-        city: formData.city,
-        car_origin: formData.car_origin,
-        car_status: formData.car_status,
-        car_mileage: formData.car_mileage ?? 0,
-        short_description: text,
-        selling_price: formData.selling_price,
-        mobile_phone: user.mobile_phone,
-      }
+  //   try {
+  //     const genDesForm = {
+  //       car_brand: formData.car_brand,
+  //       car_model: formData.car_model,
+  //       manufacturing_date: formData.manufacturing_date,
+  //       body_type: formData.body_type,
+  //       out_color: formData.out_color,
+  //       city: formData.city,
+  //       car_origin: formData.car_origin,
+  //       car_status: formData.car_status,
+  //       car_mileage: formData.car_mileage ?? 0,
+  //       short_description: text,
+  //       selling_price: formData.selling_price,
+  //       mobile_phone: user.mobile_phone,
+  //     }
 
-      const res = await postsService.generateDescriptionAI({
-        data: genDesForm,
-        access_token: getLocalStorageAcceToken(),
-      })
+  //     const res = await postsService.generateDescriptionAI({
+  //       data: genDesForm,
+  //       access_token: getLocalStorageAcceToken(),
+  //     })
 
-      setDescription(res.data.data)
-    } catch (error) {
-      showToastError({ message: 'Fail generate description' })
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }
+  //     setDescription(res.data.data)
+  //   } catch (error) {
+  //     showToastError({ message: 'Fail generate description' })
+  //   } finally {
+  //     dispatch(setLoading(false))
+  //   }
+  // }
 
   let rteObj
   function created() {
@@ -580,7 +580,7 @@ const AddPost = ({ showBreadCurmb = true }) => {
                               }}
                               created={created.bind(this)}
                               placeholder='Your description here'
-                              value={description}
+                              // value={description}
                             >
                               <></>
 

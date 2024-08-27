@@ -34,6 +34,7 @@ import ModalConfirmDelete from '../components/ModalConfirmDelete'
 import ModalUpdatePost from '../components/ModalUpdatePost'
 import { FiEye } from 'react-icons/fi'
 import StaffDetail from '../components/StaffProfile'
+import useGetData from '../hooks/use-get-data'
 
 const packageMemberships = ['Standard', 'Premium', 'VIP']
 const costPackages = [2000, 6000, 10000]
@@ -76,6 +77,7 @@ export const DetailTag = ({
 
 const PostDetail = (props) => {
   const { car_slug } = useParams()
+  const { queryTable } = useGetData()
   const dispatch = useDispatch()
   const [activeThumb, setActiveThumb] = useState(null)
   const [post, setPost] = useState(null)
@@ -100,6 +102,7 @@ const PostDetail = (props) => {
     setCustomer(response.data.data.customer)
     setStaff(response.data.data.staff)
     setIsShowBreadcrumbs(true)
+    // dispatch()
   }
 
   useEffect(() => {

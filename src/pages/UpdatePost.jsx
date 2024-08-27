@@ -19,6 +19,8 @@ import { setLoading } from '../store/reducers/app-slice'
 import { Input } from './AddPost'
 import { postsService } from '../services/post.service'
 import { selectQueryTable } from '../store/reducers/post-slice'
+import { selectUser } from '../store/reducers/auth-slice'
+import { FaFeatherAlt } from 'react-icons/fa'
 
 const TOOLBAR_SETTINGS = {
   items: [
@@ -54,6 +56,7 @@ const TOOLBAR_SETTINGS = {
 const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
   const dispatch = useAppDispatch()
   const { brands, queryTable } = useGetData()
+  const user = useAppSelector(selectUser)
   const query = useAppSelector(selectQueryTable)
   const [showMileage, setShowMileage] = useState(true)
   const [selectedImages, setSelectedImages] = useState([])
@@ -66,6 +69,7 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
   const [origins, setOrigins] = useState(null)
   const [status, setStatus] = useState(null)
   const [years, setYears] = useState(null)
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
     if (query !== null) {
@@ -76,6 +80,12 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
       getOrigins()
       getOutColors()
       getStatus()
+      setDescription(data.description)
+      // setFormData((pre) => ({ ...pre, drivetrain: data.drivetrain }))
+      // setFormData((pre) => ({ ...pre, transmission: data.transmission }))
+      // setFormData((pre) => ({ ...pre, engine_type: data.engine_type }))
+      // setFormData((pre) => ({ ...pre, total_doors: data.total_doors }))
+      // setFormData((pre) => ({ ...pre, total_seating: data.total_seating }))
     }
   }, [query])
 
@@ -170,19 +180,19 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
   }
 
   const getOutColors = () => {
-    const options = queryTable.out_color.options
+    const options = query.out_color.options
     const out_colors = Object.keys(options).map((key) => options[key].value)
     setOutColors(out_colors)
   }
 
   const getOrigins = () => {
-    const options = queryTable.car_origin.options
+    const options = query.car_origin.options
     const car_origin = Object.values(options).filter((value) => typeof value === 'string')
     setOrigins(car_origin)
   }
 
   const getStatus = () => {
-    const options = queryTable.car_status.options
+    const options = query.car_status.options
     const status = Object.values(options).filter((value) => typeof value === 'string')
     setStatus(status)
   }
@@ -219,6 +229,7 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
     const text = formatContent(instance.value)
     if (text !== data.description) {
       newFormData.append('description', text)
+      console.log(text)
     }
 
     dispatch(setLoading(true))
@@ -252,6 +263,46 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
         setFormData((pre) => ({ ...pre, description: text }))
       }
     })
+  }
+
+  const handleGenerateDesAI = async () => {
+    dispatch(setLoading(true))
+
+    const instance = rteObj
+    instance.updateValue()
+    const text = formatContent(instance.value)
+
+    console.log(formData.body_type)
+
+    try {
+      const genDesForm = {
+        car_brand: formData.car_brand,
+        car_model: formData.car_model,
+        manufacturing_date: formData.manufacturing_date,
+        body_type: formData.body_type !== '' ? formData.body_type : data.body_type,
+        out_color: formData.out_color,
+        city: formData.city,
+        car_origin: formData.car_origin,
+        car_status: formData.car_status,
+        car_mileage: formData.car_mileage ?? 0,
+        short_description: text,
+        selling_price: formData.selling_price,
+        // mobile_phone: user.mobile_phone,
+      }
+
+      // console.log(genDesForm)
+
+      const res = await postsService.generateDescriptionAI({
+        data: genDesForm,
+        access_token: getLocalStorageAcceToken(),
+      })
+
+      setDescription(res.data.data)
+    } catch (error) {
+      showToastError({ message: 'Fail generate description' })
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
 
   return (
@@ -365,7 +416,7 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
                 className='z-[33]'
                 value={parentData.days_displayed}
               /> */}
-              <div className='col-span-4 ' id='edittor'>
+              <div className='col-span-4 relative' id='edittor'>
                 <RichTextEditorComponent
                   toolbarSettings={TOOLBAR_SETTINGS}
                   height='300px'
@@ -374,11 +425,20 @@ const UpdatePost = ({ data, parentData, handleOffModal, setPost }) => {
                   }}
                   created={created.bind(this)}
                   placeholder='Your description here'
+                  value={description}
                 >
-                  <>{data.description}</>
+                  <></>
 
                   <Inject services={[HtmlEditor, Toolbar, Image, Link, QuickToolbar]} />
                 </RichTextEditorComponent>
+                {parentData && parentData.package_option === 'VIP' && (
+                  <button
+                    onClick={() => handleGenerateDesAI()}
+                    className='absolute right-0 z-10 text-white font-semibold flex gap-2 items-center text-lg bottom-0 px-4 py-2 bg-[#f97316] rounded-lg'
+                  >
+                    <FaFeatherAlt /> <span className='text-sm'>Help with AI</span>
+                  </button>
+                )}
               </div>
               <div className='col-span-4'>
                 <div className='w-full z-[1000] '>

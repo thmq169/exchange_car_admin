@@ -218,6 +218,60 @@ export const postGrid = [
   },
 ]
 
+export const carGrid = [
+  {
+    headerText: 'Thumbnail',
+    template: gridPostImage,
+    textAlign: 'Center',
+    width: '120',
+  },
+  {
+    field: 'car.id',
+    headerText: 'ID',
+    width: '60',
+    textAlign: 'Center',
+  },
+  {
+    field: 'car.car_name',
+    headerText: 'Car',
+    width: '150',
+    editType: 'dropdownedit',
+    textAlign: 'Center',
+  },
+  { headerText: 'Package', width: '100', textAlign: 'Center', field: 'package_option' },
+  {
+    headerText: 'Posted',
+    textAlign: 'Center',
+    width: '100',
+    template: gridPostDateCreated,
+  },
+  {
+    headerText: 'Expired',
+    width: '100',
+    template: gridPostDateExpired,
+    textAlign: 'Center',
+  },
+  {
+    field: 'days_displayed',
+    headerText: 'Days Published',
+    width: '80',
+    textAlign: 'Center',
+  },
+  {
+    headerText: 'Status',
+    template: gridPostStatus,
+    field: 'post_status',
+    textAlign: 'Center',
+    width: '80',
+  },
+  {
+    headerText: 'Action',
+    template: GridPostAction,
+    textAlign: 'Center',
+    width: '150',
+  },
+]
+
 export const wishListGrid = [
   {
     headerText: 'Thumbnail',

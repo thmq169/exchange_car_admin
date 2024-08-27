@@ -17,7 +17,7 @@ import {
 
 import { contextMenuItems } from '../data/dummy'
 import { Header } from '../components'
-import { postGrid } from '../components/GridTable/post'
+import { carGrid } from '../components/GridTable/post'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { selectPostsUser, setPostsUser } from '../store/reducers/post-slice'
 import { useNavigate } from 'react-router-dom'
@@ -87,7 +87,7 @@ const Car = () => {
         >
           <ColumnsDirective>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            {postGrid.map((item, index) => (
+            {carGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
