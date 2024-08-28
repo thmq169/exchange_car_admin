@@ -9,6 +9,7 @@ import {
   GET_POSTS,
   GET_POSTS_USER,
   QUERY_TABLE,
+  UNPOST,
   UPDATE_POST,
 } from './endpoint'
 
@@ -72,5 +73,16 @@ export const postsService = {
         Authorization: `Bearer ${access_token}`,
       },
     })
+  },
+  unActivePost: ({ post_id, access_token }) => {
+    return axiosClient.post(
+      UNPOST + `/${post_id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    )
   },
 }

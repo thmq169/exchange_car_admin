@@ -7,7 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/zoom'
 import 'swiper/css/thumbs'
-import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar, FaHeart, FaTrashAlt } from 'react-icons/fa'
+import { FaCar, FaCarSide, FaCheckSquare, FaCommentDollar, FaHeart, FaRegEyeSlash, FaTrashAlt } from 'react-icons/fa'
 import { SiBrandfolder, SiCoronaengine } from 'react-icons/si'
 import { MdLocationCity, MdModelTraining, MdOutlineAirlineSeatReclineNormal, MdOutlineUploadFile } from 'react-icons/md'
 import { BsCalendar2Date, BsCreditCard2Front, BsFillPinMapFill, BsSpeedometer2 } from 'react-icons/bs'
@@ -35,6 +35,7 @@ import ModalUpdatePost from '../components/ModalUpdatePost'
 import { FiEye } from 'react-icons/fi'
 import StaffDetail from '../components/StaffProfile'
 import useGetData from '../hooks/use-get-data'
+import ModalConfirmUnPost from '../components/ModalConfirmUnPost'
 
 const packageMemberships = ['Standard', 'Premium', 'VIP']
 const costPackages = [2000, 6000, 10000]
@@ -90,6 +91,7 @@ const PostDetail = (props) => {
   const user = useAppSelector(selectUser)
   const navigate = useNavigate()
   const [showModalDelete, setShowModalDelete] = useState(false)
+  const [showModalUnactive, setShowModalUnActive] = useState(false)
   const [showModalUpdate, setShowModalUpdate] = useState(false)
   const [costDays, setCostDays] = useState(calculateCostForPublisDay(7))
   const [day, setDay] = useState(null)
@@ -436,12 +438,32 @@ const PostDetail = (props) => {
                         <FaTrashAlt className='w-full h-full' />
                       </button>
                     </TooltipComponent>
+
+                    {parentData.post_status === 'Active' && (
+                      <TooltipComponent
+                        content={`Unactive this post`}
+                        position='TopCenter'
+                        tabIndex={0}
+                        onClick={() => setShowModalUnActive(true)}
+                      >
+                        <button className='text-white hover:bg-opacity-75 bg-red-700 py-2 px-3 h-full capitalize rounded-lg text-md'>
+                          <FaRegEyeSlash className='w-full h-full' />
+                        </button>
+                      </TooltipComponent>
+                    )}
                   </div>
                   {showModalDelete && (
                     <ModalConfirmDelete
                       setShow={setShowModalDelete}
                       data={parentData}
                       handleClick={() => navigate('/cars')}
+                    />
+                  )}
+                  {showModalUnactive && (
+                    <ModalConfirmUnPost
+                      setShow={setShowModalUnActive}
+                      data={parentData}
+                      setParentData={setParentData}
                     />
                   )}
                 </div>

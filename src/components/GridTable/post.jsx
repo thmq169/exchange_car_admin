@@ -55,6 +55,24 @@ export const gridPostStatus = (props) => {
   )
 }
 
+export const gridPostPackage = (props) => {
+  const statusColorMap = {
+    VIP: '#F5AD2B',
+    Standard: '#3EBAB0',
+    Premium: '#A9BDDB',
+  }
+
+  return (
+    <button
+      type='button'
+      style={{ background: statusColorMap[props.package_option] }}
+      className={'text-white py-1 px-2 capitalize rounded-2xl text-md' + statusColorMap[props.post_status]}
+    >
+      {props.package_option}
+    </button>
+  )
+}
+
 const gridPostCustomerFullName = (props) => (
   <span>
     {props.customer.first_name} {props.customer.last_name}
@@ -238,7 +256,7 @@ export const carGrid = [
     editType: 'dropdownedit',
     textAlign: 'Center',
   },
-  { headerText: 'Package', width: '100', textAlign: 'Center', field: 'package_option' },
+  { headerText: 'Package', width: '100', textAlign: 'Center', field: 'package_option', template: gridPostPackage },
   {
     headerText: 'Posted',
     textAlign: 'Center',
@@ -348,6 +366,60 @@ export const customerGrid = [
     template: GridCustomerAction,
     textAlign: 'Center',
     width: '100',
+  },
+]
+
+export const postByCustomerGrid = [
+  {
+    headerText: 'Thumbnail',
+    template: gridPostImage,
+    textAlign: 'Center',
+    width: '120',
+  },
+  {
+    field: 'car.id',
+    headerText: 'ID',
+    width: '60',
+    textAlign: 'Center',
+  },
+  {
+    field: 'car.car_name',
+    headerText: 'Car',
+    width: '150',
+    editType: 'dropdownedit',
+    textAlign: 'Center',
+  },
+  { headerText: 'Package', width: '100', textAlign: 'Center', field: 'package_option', template: gridPostPackage },
+  {
+    headerText: 'Posted',
+    textAlign: 'Center',
+    width: '100',
+    template: gridPostDateCreated,
+  },
+  {
+    headerText: 'Expired',
+    width: '100',
+    template: gridPostDateExpired,
+    textAlign: 'Center',
+  },
+  {
+    field: 'days_displayed',
+    headerText: 'Days Published',
+    width: '80',
+    textAlign: 'Center',
+  },
+  {
+    headerText: 'Status',
+    template: gridPostStatus,
+    field: 'post_status',
+    textAlign: 'Center',
+    width: '80',
+  },
+  {
+    headerText: 'Action',
+    template: GridPostAction,
+    textAlign: 'Center',
+    width: '150',
   },
 ]
 

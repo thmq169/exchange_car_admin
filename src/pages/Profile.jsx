@@ -53,7 +53,11 @@ const Profile = () => {
         <Breadcrumbs />
       </div>
       <div className='m-2 mt-10 md:mt-4 md:mx-10 p-2 md:p-10 bg-white rounded-3xl flex flex-col  gap-6'>
-        <OwnerDetail customer={user} enableUpdate={true} />
+        <OwnerDetail
+          title={user && user.user_roles.includes('Staff') ? 'Staff' : null}
+          customer={user}
+          enableUpdate={true}
+        />
         <div className='flex items-center gap-4'>
           <Toggle isActive={enableChangePassword} setIsActive={handleShowChangePassword} />
           <div className='font-semibold'>Change Your Password</div>

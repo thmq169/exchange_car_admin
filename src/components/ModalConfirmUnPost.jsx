@@ -8,7 +8,7 @@ import { postsService } from '../services/post.service'
 import { getLocalStorageAcceToken } from '../utils'
 import { selectPostsUser, setPostsUser } from '../store/reducers/post-slice'
 
-const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
+const ModalConfirmUnPost = ({ setShow, data, setParentData }) => {
   const dispatch = useAppDispatch()
   const postsUser = useAppSelector(selectPostsUser)
   const nodeRef = useClickOutside(() => {
@@ -19,23 +19,22 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
     setShow(false)
   }, [setShow])
 
-  const handleDelete = async (post_id, handleClick) => {
+  const handleUnPost = async (post_id) => {
     dispatch(setLoading(true))
     try {
-      const res = await postsService.deletePost({ post_id: post_id, access_token: getLocalStorageAcceToken() })
+      const res = await postsService.unActivePost({ post_id: post_id, access_token: getLocalStorageAcceToken() })
 
-      if (res.status === 200) {
-        const newListPostUser = postsUser.filter((post) => post.id !== post_id)
-        dispatch(setPostsUser(newListPostUser))
+      if (res.status === 201) {
+        const newPostByUser = postsUser.map((post) => (post.id === data.id ? { ...post, ...res.data.data } : post))
+        dispatch(setPostsUser(newPostByUser))
+        setParentData((pre) => ({ ...pre, ...res.data.data }))
         handleOffModal()
-        showToastSuccess({ message: res.data.data.message })
-        if (handleClick) {
-          handleClick()
-        }
+        showToastSuccess({ message: 'Unactive post success!' })
       }
     } catch (error) {
-      showToastError({ message: error.message })
+      showToastError({ message: 'Unactive post failed!' })
     } finally {
+      handleOffModal()
       dispatch(setLoading(false))
     }
   }
@@ -62,7 +61,7 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
         <h2 className='font-semibold text-2xl text-center capitalize text-[#3B3B3B]'>Are you sure?</h2>
 
         <p className='text-lg ' style={{ textWrap: 'wrap' }}>
-          Do you want to delete <strong>{data.car.car_name}</strong>?
+          Do you want to unactive <strong>{data.car.car_name}</strong>?
         </p>
 
         <div className='w-full flex items-center gap-4 z-[1000]'>
@@ -75,10 +74,10 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
           <button
             className='rounded-xl p-4 text-[#EDF5FF] flex-1 text-lg bg-[#f97316]'
             onClick={() => {
-              handleDelete(data.id, handleClick)
+              handleUnPost(data.id)
             }}
           >
-            Delete Now
+            Unpost
           </button>
         </div>
       </motion.div>
@@ -86,4 +85,4 @@ const ModalConfirmDelete = ({ setShow, data, handleClick }) => {
   )
 }
 
-export default ModalConfirmDelete
+export default ModalConfirmUnPost

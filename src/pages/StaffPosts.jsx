@@ -18,11 +18,10 @@ import { contextMenuItems } from '../data/dummy'
 import { Header } from '../components'
 import { postGrid } from '../components/GridTable/post'
 import { useAppDispatch } from '../hooks/hook'
-import { setPostsUser } from '../store/reducers/post-slice'
+import { setPosts } from '../store/reducers/post-slice'
 import { useNavigate } from 'react-router-dom'
 import { getLocalStorageAcceToken } from '../utils'
 import { setUser } from '../store/reducers/auth-slice'
-import { showToastError } from '../helpers'
 import { authService } from '../services/auth.service'
 import { postsService } from '../services/post.service'
 import useGetData from '../hooks/use-get-data'
@@ -32,30 +31,38 @@ const Car = () => {
 
   const editing = { allowDeleting: true, allowEditing: true }
   const toolbarOptions = ['Search']
-  const filterSettings = { type: 'Excel' }
   const dispatch = useAppDispatch()
   const { posts } = useGetData()
   const [postByPackage, setPostByPackage] = useState([])
 
-  const getListPostsUser = async (userId) => {
-    try {
-      // await dispatch(getPostsUser({ customer_id: user.id }))
-      const response = await postsService.getPostsUser({ customer_id: userId })
-      dispatch(setPostsUser(response.data.data.car_posts))
-    } catch (error) {
-      showToastError({ message: error.message })
-    }
-  }
-
   const fetchUser = async () => {
     const response = await authService.getProfile(getLocalStorageAcceToken())
     dispatch(setUser(response.data.data.currentUser))
-    // getListPostsUser(response.data.data.currentUser.id)
   }
 
   useEffect(() => {
     fetchUser()
   }, [])
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const pathname = window.location.pathname
+        const packageName = pathname.replace('/', '')
+        const res = await postsService.getAllPosts()
+        dispatch(setPosts(res.data.data.car_posts))
+        const newPosts = res.data.data.car_posts.filter(
+          (post) => String(post.package_option).toLocaleLowerCase() === packageName
+        )
+        setPostByPackage(newPosts)
+      } catch (error) {
+        console.log('Log - error:', error)
+      }
+    }
+    if (posts.length === 0) {
+      fetchPost()
+    }
+  }, [posts, dispatch])
 
   useEffect(() => {
     if (posts !== null) {

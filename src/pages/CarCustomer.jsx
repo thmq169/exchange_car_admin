@@ -17,7 +17,7 @@ import {
 
 import { contextMenuItems } from '../data/dummy'
 import { Header } from '../components'
-import { postGrid } from '../components/GridTable/post'
+import { postByCustomerGrid } from '../components/GridTable/post'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { selectPostsUser, setPostsUser } from '../store/reducers/post-slice'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -51,7 +51,7 @@ const Car = () => {
   return (
     <div className='m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl'>
       <div className='flex justify-between items-center'>
-        <Header category='Page' title='Your Car Posts' />
+        <Header category='Page' title={`Customer Posts`} />
         <div className='flex justify-center items-center rounded-full mb-3'>
           <button
             type='button'
@@ -78,7 +78,7 @@ const Car = () => {
         >
           <ColumnsDirective>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            {postGrid.map((item, index) => (
+            {postByCustomerGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
